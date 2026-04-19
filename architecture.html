@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeskRadar — Architecture</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="architecture.html" class="active">Architecture</a></li>
+    <li><a href="deskradar.html">deskradar</a></li>
+    <li><a href="pi-services.html">pi-services</a></li>
+    <li><a href="matrixportal.html">matrixportal</a></li>
+    <li><a href="configuration.html">Configuration</a></li>
+    <li><a href="installation.html">Installation</a></li>
+  </ul>
+</nav>
+<div class="container">
+
+  <h1>Architecture</h1>
+  <p class="subtitle">How the components connect, the boot sequence, and the data flow.</p>
+
+  <h2>Network Topology</h2>
+
+  <p>DeskRadar operates in one of two network modes:</p>
+
+  <h3>AP Mode (initial setup / fallback)</h3>
+  <p>The Pi creates a WiFi access point named <strong>deskradar</strong> (password: <code>deskradaradsb</code>) with IP <code>10.42.0.50</code>. The MatrixPortal S3 joins this AP automatically (its <code>wifi.txt</code> is pre-configured with these credentials). The web configurator is reachable at <code>http://10.42.0.50:5000</code>.</p>
+
+  <pre>
+  Laptop/Phone ──── WiFi (SSID: deskradar) ────► Pi (AP, 10.42.0.50)
+                                                      │
+                                            MatrixPortal S3
+                                            also on this AP</pre>
+
+  <h3>LAN Mode (normal operation)</h3>
+  <p>Once a home WiFi network is configured via the web UI, both the Pi and the MatrixPortal join it. The Pi's boot service resolves <code>deskradar-portal.local</code> via mDNS to find the MatrixPortal's IP and writes it to the config file.</p>
+
+  <pre>
+  Home Router ──── Pi (deskradar.local)
+              └─── MatrixPortal S3 (deskradar-portal.local)</pre>
+
+  <h2>Boot Sequence</h2>
+
+  <p>systemd enforces this ordering on every Pi boot:</p>
+
+  <pre>
+  1. deskradar-lcd.service starts
+     └─ FastAPI server on :8010 ready to accept LCD messages
+
+  2. deskradar-bootstrap.service starts (oneshot, requires lcd)
+     ├─ Waits 10 seconds for network to stabilise
+     ├─ Resolves deskradar-portal.local (retries every 2s, 30s timeout)
+     ├─ Sends status updates to LCD service throughout
+     └─ Writes resolved IP to /etc/deskradar/config.json as MATRIX_HTTP_URL
+
+  3. deskradar.service starts (after bootstrap + network-online)
+     └─ Main aircraft tracking app, reads config, polls dump1090
+
+  4. deskradar-configurator.service starts (after bootstrap + network-online)
+     └─ Flask web UI on :5000</pre>
+
+  <div class="note">If bootstrap fails (mDNS timeout), <code>deskradar.service</code> and <code>deskradar-configurator.service</code> may start without a valid <code>MATRIX_HTTP_URL</code>. The main app will log connection errors until the MatrixPortal becomes reachable.</div>
+
+  <h2>Service Dependency Graph</h2>
+
+  <pre>
+  network-online.target
+        │
+        ▼
+  deskradar-lcd ──────────────────────────────────┐
+        │                                         │
+        ▼ (Requires)                              │
+  deskradar-bootstrap (oneshot)                   │
+        │                                         │
+        ├──► deskradar (After)          (After) ◄─┘
+        │                                         │
+        └──► deskradar-configurator (After) ◄─────┘</pre>
+
+  <table>
+    <thead><tr><th>Service</th><th>Type</th><th>Restart</th><th>User</th></tr></thead>
+    <tbody>
+      <tr><td><code>deskradar-lcd</code></td><td>simple</td><td>always</td><td>(default)</td></tr>
+      <tr><td><code>deskradar-bootstrap</code></td><td>oneshot</td><td>on-failure</td><td>root</td></tr>
+      <tr><td><code>deskradar</code></td><td>simple</td><td>always</td><td>root</td></tr>
+      <tr><td><code>deskradar-configurator</code></td><td>simple</td><td>always</td><td>(default)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Data Flow</h2>
+
+  <h3>Per polling cycle (every POLL_CADENCE seconds)</h3>
+
+  <pre>
+  dump1090 API (:8080/data/aircraft.json)
+        │
+        │  HTTP GET
+        ▼
+  fetch raw JSON
+        │
+        ▼
+  sanitise_new_data()
+  ├─ drop aircraft missing required fields
+  ├─ drop altitude below MIN_ALT
+  └─ drop aircraft outside lat/lon bounds
+        │
+        ▼
+  iterate_data()  — merge new points into per-flight store
+        │
+        ▼
+  format_blocks()  — 10-stage pipeline per flight
+  │  1. clear_hidden()             remove deferred smoothing flags
+  │  2. clear_closest_marker()     reset previous closest colour
+  │  3. enforce_max_history()      trim to MAX_HISTORY points
+  │  4. enforce_max_time()         remove if unseen > MAX_UNSEEN_SECS
+  │  5. plot()                     lat/lon → pixel coordinates
+  │  6. remove_latest_dupe()       drop points at same pixel (within 500ft alt)
+  │  7. fill_gaps()                interpolate across gaps > 1 pixel
+  │  8. smooth_steps_deferred_head() remove 90° corners from track
+  │  9. add_colour()               altitude → RGB (white→yellow→green→blue→purple→red)
+  │ 10. fade()                     dim trail colours by FADE_FACTOR each cycle
+        │
+        ▼
+  extract_draw()
+  ├─ skip _hidden points
+  └─ deduplicate by pixel: keep highest-altitude point per (x,y)
+        │
+        ├──► send_matrix()   HTTP POST /draw  to MatrixPortal
+        │    or send_no_change() if pixel data unchanged
+        │
+        └──► manage_closest()  HTTP POST /display to LCD service
+             (sends closest aircraft callsign + spinner)</pre>
+
+  <h2>State: the flight store</h2>
+
+  <p>The main app maintains an in-memory dictionary keyed by ICAO flight callsign. Each entry is a list of data points accumulated over time:</p>
+
+  <pre>
+  store = {
+    "BAW123": [
+      {
+        "timestamp": 1745000000.0,
+        "hex": "400abc",
+        "flight": "BAW123",
+        "seen": 0.5,
+        "alt": 28000,
+        "lat": 51.234,
+        "lon": -0.456,
+        "x": 34,
+        "y": 21,
+        "r": 30,
+        "g": 80,
+        "b": 255
+      },
+      ...
+    ],
+    ...
+  }</pre>
+
+  <p>Points accumulate up to <code>MAX_HISTORY</code>. Aircraft not seen for <code>MAX_UNSEEN_SECS</code> are removed from the store entirely.</p>
+
+  <h2>Altitude Color Mapping</h2>
+
+  <p>The <code>radar_altitude_to_rgb()</code> function maps altitude (0–42,000 ft) to a smooth gradient across 8 stops. Colors are linearly interpolated between stops:</p>
+
+  <table>
+    <thead><tr><th>Altitude</th><th>Color</th><th>RGB</th></tr></thead>
+    <tbody>
+      <tr><td>0 ft</td><td>White</td><td>255, 255, 255</td></tr>
+      <tr><td>6,000 ft</td><td>Yellow</td><td>255, 255, 0</td></tr>
+      <tr><td>12,000 ft</td><td>Green</td><td>0, 200, 0</td></tr>
+      <tr><td>18,000 ft</td><td>Light Blue</td><td>0, 200, 255</td></tr>
+      <tr><td>24,000 ft</td><td>Mid Blue</td><td>0, 80, 255</td></tr>
+      <tr><td>30,000 ft</td><td>Dark Blue</td><td>0, 0, 200</td></tr>
+      <tr><td>36,000 ft</td><td>Purple</td><td>150, 0, 200</td></tr>
+      <tr><td>42,000 ft</td><td>Red</td><td>255, 0, 0</td></tr>
+    </tbody>
+  </table>
+
+  <p>Stale aircraft (seen but not updated recently) are rendered in red regardless of altitude. The closest aircraft is recolored to <code>CLOSEST_COLOUR</code> (white by default).</p>
+
+  <h2>LCD Display Protocol</h2>
+
+  <p>Any service that wants to show text on the LCD sends a POST request to the LCD service on the Pi:</p>
+
+  <pre>POST http://127.0.0.1:8010/display
+Content-Type: application/json
+
+{
+  "line1": "BAW123",
+  "line2": ""
+}</pre>
+
+  <p>The LCD service deduplicates: if the message hasn't changed it returns <code>{"status": "ok", "skipped": true}</code> and does not re-send I2C commands.</p>
+
+  <h2>Configuration Update Flow</h2>
+
+  <pre>
+  Browser → POST /config (Flask configurator)
+                │
+                ▼
+           app.py merges form values into existing config dict
+                │
+                ▼
+           calls update_config.py subprocess (JSON on stdin)
+                │
+                ├─ writes /etc/deskradar/config.json
+                └─ sudo systemctl restart deskradar</pre>
+
+</div>
+</body>
+</html>

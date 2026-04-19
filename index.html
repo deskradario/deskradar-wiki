@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeskRadar — Overview</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <ul>
+    <li><a href="index.html" class="active">Overview</a></li>
+    <li><a href="architecture.html">Architecture</a></li>
+    <li><a href="deskradar.html">deskradar</a></li>
+    <li><a href="pi-services.html">pi-services</a></li>
+    <li><a href="matrixportal.html">matrixportal</a></li>
+    <li><a href="configuration.html">Configuration</a></li>
+    <li><a href="installation.html">Installation</a></li>
+  </ul>
+</nav>
+<div class="container">
+
+  <h1>DeskRadar</h1>
+  <p class="subtitle">Real-time aircraft tracking on a 64×64 LED matrix display.</p>
+
+  <p>DeskRadar is a hardware and software system that polls live ADS-B data from a local <a href="https://github.com/flightaware/dump1090">dump1090</a> receiver and renders nearby aircraft tracks on a 64×64 RGB LED matrix. Altitude is mapped to color, historical trails fade over time, and the closest aircraft is highlighted and shown on a 16×2 LCD display. The entire system runs on a Raspberry Pi alongside a small CircuitPython device that drives the LED matrix.</p>
+
+  <h2>Components</h2>
+
+  <div class="component-grid">
+    <div class="component-card">
+      <h3><a href="deskradar.html">deskradar</a></h3>
+      <p>Python application that polls ADS-B data, processes aircraft tracks through a multi-stage pipeline, and sends pixel draw commands to the matrix.</p>
+      <p><strong>Language:</strong> Python 3.13<br>
+      <strong>Runs on:</strong> Raspberry Pi (Linux)</p>
+    </div>
+    <div class="component-card">
+      <h3><a href="pi-services.html">deskradar-pi-services</a></h3>
+      <p>Supporting services on the Pi: a FastAPI LCD display service, a Flask web configurator, and a boot-time mDNS resolver.</p>
+      <p><strong>Language:</strong> Python<br>
+      <strong>Managed by:</strong> systemd</p>
+    </div>
+    <div class="component-card">
+      <h3><a href="matrixportal.html">deskradar-matrixportals3</a></h3>
+      <p>CircuitPython firmware on an Adafruit MatrixPortal S3. Exposes an HTTP API and renders pixel commands to the physical 64×64 LED matrix.</p>
+      <p><strong>Language:</strong> CircuitPython<br>
+      <strong>Hardware:</strong> MatrixPortal S3 + HUB75 matrix</p>
+    </div>
+  </div>
+
+  <h2>System Diagram</h2>
+
+  <pre>
+  ┌──────────────── Raspberry Pi ─────────────────────────────────────┐
+  │                                                                    │
+  │  ┌──────────────┐   ADS-B JSON   ┌──────────────────────────┐    │
+  │  │  dump1090    │ ─────────────► │   deskradar (main app)   │    │
+  │  │  :8080       │                │   polls every second     │    │
+  │  └──────────────┘                └──────────┬───────────────┘    │
+  │                                             │                     │
+  │  ┌────────────────────┐          pixel draw │  HTTP POST /draw   │
+  │  │  deskradar-        │          commands   │                     │
+  │  │  configurator      │                     ▼                     │
+  │  │  Flask :5000       │   ┌───────────────────────────────────┐  │
+  │  └────────────────────┘   │   deskradar-matrixportals3        │  │
+  │                           │   MatrixPortal S3 (ESP32-S3)      │  │
+  │  ┌────────────────────┐   │   WiFi · HTTP :80                 │  │
+  │  │  deskradar-lcd     │   │   Renders to 64×64 LED matrix     │  │
+  │  │  FastAPI :8010     │   └───────────────────────────────────┘  │
+  │  │  → I2C LCD display │                                           │
+  │  └────────────────────┘                                           │
+  │                                                                    │
+  └────────────────────────────────────────────────────────────────────┘
+
+  /etc/deskradar/config.json — shared configuration file
+  deskradar-bootstrap — resolves deskradar-portal.local at boot,
+                        writes MatrixPortal IP to config</pre>
+
+  <h2>Data Flow Summary</h2>
+  <ol>
+    <li>dump1090 receives ADS-B transmissions from aircraft and exposes them as JSON at <code>:8080/data/aircraft.json</code>.</li>
+    <li>The <strong>deskradar</strong> app polls that endpoint every second, filters aircraft by altitude and geographic bounds, then runs each track through a 10-stage processing pipeline (plot → deduplicate → fill gaps → smooth → color by altitude → fade trails).</li>
+    <li>The resulting pixel list is sent via HTTP POST to the <strong>MatrixPortal S3</strong>, which renders it onto the 64×64 LED matrix.</li>
+    <li>Simultaneously, the closest aircraft callsign is sent to the <strong>LCD service</strong> on the Pi, which displays it on a 16×2 character display.</li>
+    <li>The <strong>web configurator</strong> allows changing all settings from a browser and restarts the main app when saved.</li>
+  </ol>
+
+  <h2>Quick Links</h2>
+  <ul>
+    <li><a href="installation.html">Installation guide</a> — set up the full system from scratch</li>
+    <li><a href="configuration.html">Configuration reference</a> — all <code>config.json</code> fields</li>
+    <li><a href="architecture.html">Architecture</a> — boot sequence, service dependencies, network topology</li>
+    <li><a href="matrixportal.html#api">MatrixPortal HTTP API</a> — endpoint reference</li>
+  </ul>
+
+</div>
+</body>
+</html>
