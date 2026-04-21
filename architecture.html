@@ -11,11 +11,11 @@
   <ul>
     <li><a href="index.html">Overview</a></li>
     <li><a href="architecture.html" class="active">Architecture</a></li>
-    <li><a href="deskradar.html">deskradar</a></li>
-    <li><a href="pi-services.html">pi-services</a></li>
-    <li><a href="matrixportal.html">matrixportal</a></li>
+    <li><a href="source.html">Source</a></li>
     <li><a href="configuration.html">Configuration</a></li>
     <li><a href="installation.html">Installation</a></li>
+    <li><a href="bill_of_materials.html">Bill of Materials</a></li>
+    <li><a href="stores.html">Stores</a></li>
   </ul>
 </nav>
 <div class="container">
@@ -36,7 +36,7 @@
                                             MatrixPortal S3
                                             also on this AP</pre>
 
-  <h3>LAN Mode (normal operation)</h3>
+  <h3>LAN Mode</h3>
   <p>Once a home WiFi network is configured via the web UI, both the Pi and the MatrixPortal join it. The Pi's boot service resolves <code>deskradar-portal.local</code> via mDNS to find the MatrixPortal's IP and writes it to the config file.</p>
 
   <pre>
@@ -134,34 +134,6 @@
         └──► manage_closest()  HTTP POST /display to LCD service
              (sends closest aircraft callsign + spinner)</pre>
 
-  <h2>State: the flight store</h2>
-
-  <p>The main app maintains an in-memory dictionary keyed by ICAO flight callsign. Each entry is a list of data points accumulated over time:</p>
-
-  <pre>
-  store = {
-    "BAW123": [
-      {
-        "timestamp": 1745000000.0,
-        "hex": "400abc",
-        "flight": "BAW123",
-        "seen": 0.5,
-        "alt": 28000,
-        "lat": 51.234,
-        "lon": -0.456,
-        "x": 34,
-        "y": 21,
-        "r": 30,
-        "g": 80,
-        "b": 255
-      },
-      ...
-    ],
-    ...
-  }</pre>
-
-  <p>Points accumulate up to <code>MAX_HISTORY</code>. Aircraft not seen for <code>MAX_UNSEEN_SECS</code> are removed from the store entirely.</p>
-
   <h2>Altitude Color Mapping</h2>
 
   <p>The <code>radar_altitude_to_rgb()</code> function maps altitude (0–42,000 ft) to a smooth gradient across 8 stops. Colors are linearly interpolated between stops:</p>
@@ -196,19 +168,6 @@ Content-Type: application/json
 
   <p>The LCD service deduplicates: if the message hasn't changed it returns <code>{"status": "ok", "skipped": true}</code> and does not re-send I2C commands.</p>
 
-  <h2>Configuration Update Flow</h2>
-
-  <pre>
-  Browser → POST /config (Flask configurator)
-                │
-                ▼
-           app.py merges form values into existing config dict
-                │
-                ▼
-           calls update_config.py subprocess (JSON on stdin)
-                │
-                ├─ writes /etc/deskradar/config.json
-                └─ sudo systemctl restart deskradar</pre>
 
 </div>
 </body>

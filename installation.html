@@ -11,223 +11,43 @@
   <ul>
     <li><a href="index.html">Overview</a></li>
     <li><a href="architecture.html">Architecture</a></li>
-    <li><a href="deskradar.html">deskradar</a></li>
-    <li><a href="pi-services.html">pi-services</a></li>
-    <li><a href="matrixportal.html">matrixportal</a></li>
+    <li><a href="source.html">Source</a></li>
     <li><a href="configuration.html">Configuration</a></li>
     <li><a href="installation.html" class="active">Installation</a></li>
+    <li><a href="bill_of_materials.html">Bill of Materials</a></li>
+    <li><a href="stores.html">Stores</a></li>
   </ul>
 </nav>
 <div class="container">
 
   <h1>Installation</h1>
-  <p class="subtitle">Setting up the full DeskRadar system from scratch.</p>
+  <p class="subtitle">Get DeskRadar running using the pre-built Raspberry Pi image.</p>
 
-  <h2>Prerequisites</h2>
+  <h2>Pi Image</h2>
 
-  <h3>Hardware</h3>
-  <ul>
-    <li>Raspberry Pi 4 (other models may work)</li>
-    <li>Raspberry Pi OS (Bookworm or later)</li>
-    <li>RTL-SDR dongle (for ADS-B reception) or another dump1090 source</li>
-    <li>Adafruit MatrixPortal S3</li>
-    <li>64×64 HUB75 RGB LED matrix panel</li>
-    <li>5V power supply rated for the LED matrix (minimum 4A for a 64×64 panel)</li>
-    <li>16×2 I2C LCD display (LCD1602 with PCF8574 I2C backpack, address 0x7c)</li>
-    <li>USB-C cable (for initial MatrixPortal firmware install)</li>
-  </ul>
+  <p>The easiest way to get DeskRadar running is to flash the pre-built Pi image. It includes all software pre-installed and configured — no manual dependency installation required.</p>
 
-  <h3>Software</h3>
-  <ul>
-    <li>Python 3.13 on the Pi</li>
-    <li>dump1090 or dump1090-fa running on the Pi</li>
-    <li>CircuitPython installed on the MatrixPortal S3 (available from <a href="https://circuitpython.org/board/adafruit_matrixportal_s3/">circuitpython.org</a>)</li>
-    <li>Git</li>
-  </ul>
+  <p><a href="#">Download DeskRadar Pi Image</a> <em>(link coming soon)</em></p>
 
-  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e0e0e0;">
+  <div class="note">The image was built fresh from Raspberry Pi OS Bookworm (64-bit) but still contains a significant amount of default bloat. Removing unnecessary packages is recommended before deploying in production.</div>
 
-  <h2>Step 1 — Install MatrixPortal Firmware</h2>
-
-  <p>This step is done from your Mac or Linux machine, not the Pi.</p>
+  <h2>Flashing the Image</h2>
 
   <ol>
-    <li>Ensure CircuitPython is already installed on the MatrixPortal S3. If not, download the latest <code>.uf2</code> file from circuitpython.org and drag it onto the device's boot drive.</li>
-    <li>Clone the firmware repository:
-      <pre>git clone https://github.com/deskradario/deskradar-matrixportals3.git
-cd deskradar-matrixportals3</pre>
-    </li>
-    <li>Connect the MatrixPortal S3 via USB-C. It will appear as <code>CIRCUITPY</code> at <code>/Volumes/CIRCUITPY/</code>.</li>
-    <li>Edit <code>src/wifi.txt</code> — set line 1 to your WiFi SSID and line 2 to your password. For initial setup on the Pi's AP, use:
-      <pre>deskradar
-deskradaradsb</pre>
-    </li>
-    <li>Copy all files to the device:
-      <pre>./install.sh</pre>
-    </li>
-    <li>The device reboots. Check the serial console (<code>screen /dev/tty.usbmodem* 115200</code>) to confirm it connects to WiFi and prints its IP address.</li>
+    <li>Download the image above.</li>
+    <li>Flash it to a microSD card using <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager</a> or <code>dd</code>.</li>
+    <li>Insert the card into your Raspberry Pi 4 and power it on.</li>
   </ol>
 
-  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e0e0e0;">
+  <h2>After First Boot</h2>
 
-  <h2>Step 2 — Raspberry Pi Base Setup</h2>
+  <p>On first boot the Pi will broadcast a WiFi access point named <strong>deskradar</strong> (password: <code>deskradaradsb</code>). Connect to it from your phone or laptop and open <code>http://10.42.0.50:5000</code> to configure your home WiFi network and set your location coordinates.</p>
 
-  <ol>
-    <li>Flash Raspberry Pi OS (Bookworm, 64-bit) to a microSD card and boot the Pi.</li>
-    <li>Install Python 3.13:
-      <pre>sudo apt update
-sudo apt install -y python3.13 python3.13-venv python3.13-dev
-sudo apt install -y i2c-tools git nmcli</pre>
-    </li>
-    <li>Enable I2C in <code>raspi-config</code>:
-      <pre>sudo raspi-config</pre>
-      <p>Navigate to <em>Interface Options → I2C → Enable</em>.</p>
-    </li>
-    <li>Install and start dump1090 (if not already running):
-      <pre>sudo apt install -y dump1090-fa
-sudo systemctl enable dump1090-fa
-sudo systemctl start dump1090-fa</pre>
-      <p>Verify it's serving data: <code>curl http://127.0.0.1:8080/data/aircraft.json</code></p>
-    </li>
-    <li>Connect the I2C LCD to the Pi's GPIO I2C pins (SDA/SCL on pins 3/5). Verify detection:
-      <pre>sudo i2cdetect -y 1</pre>
-      <p>You should see address <code>7c</code> in the output.</p>
-    </li>
-  </ol>
+  <p>See <a href="architecture.html">Architecture</a> for a full description of the boot sequence and network modes.</p>
 
-  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e0e0e0;">
+  <h2>MatrixPortal S3 Firmware</h2>
 
-  <h2>Step 3 — Deploy Pi Services</h2>
-
-  <ol>
-    <li>Clone the services repository:
-      <pre>sudo git clone https://github.com/deskradario/deskradar-pi-services.git /opt/deskradar-pi-services
-cd /opt/deskradar-pi-services</pre>
-    </li>
-    <li>Create the virtual environment and install dependencies:
-      <pre>python3.13 -m venv .venv
-.venv/bin/pip install -r requirements.txt</pre>
-    </li>
-    <li>Set up mDNS and sudoers (run once):
-      <pre>bash configurator/setup_mdns.sh</pre>
-      <p>The Pi is now reachable as <code>deskradar.local</code>.</p>
-    </li>
-    <li>Set up the WiFi access point (run once):
-      <pre>bash scripts/setup_ap.sh</pre>
-    </li>
-    <li>Create the config directory and default config:
-      <pre>sudo mkdir -p /etc/deskradar
-sudo cp configurator/config.json /etc/deskradar/config.json</pre>
-    </li>
-    <li>Edit the config to set your location:
-      <pre>sudo nano /etc/deskradar/config.json</pre>
-      <p>Set <code>LAT</code> and <code>LON</code> to your coordinates.</p>
-    </li>
-    <li>Install and enable the systemd services:
-      <pre>bash install_services.sh</pre>
-    </li>
-  </ol>
-
-  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e0e0e0;">
-
-  <h2>Step 4 — Deploy Main deskradar App</h2>
-
-  <ol>
-    <li>Clone the main application:
-      <pre>sudo git clone https://github.com/deskradario/deskradar.git /opt/deskradar
-cd /opt/deskradar</pre>
-    </li>
-    <li>Create the virtual environment and install dependencies:
-      <pre>python3.13 -m venv .venv
-.venv/bin/pip install -r requirements.txt</pre>
-    </li>
-    <li>Verify the config file is in place:
-      <pre>cat /etc/deskradar/config.json</pre>
-    </li>
-  </ol>
-
-  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e0e0e0;">
-
-  <h2>Step 5 — First Boot</h2>
-
-  <ol>
-    <li>Connect the MatrixPortal S3 to the 64×64 LED matrix and power both on.</li>
-    <li>Make sure the MatrixPortal has joined the Pi's AP (<code>deskradar</code> SSID) — its <code>wifi.txt</code> should already have these credentials from Step 1.</li>
-    <li>Reboot the Pi:
-      <pre>sudo reboot</pre>
-    </li>
-    <li>The LCD display will show status messages as the Pi boots:
-      <ul>
-        <li>LCD service starts first</li>
-        <li>Boot check resolves <code>deskradar-portal.local</code> and shows the MatrixPortal's IP</li>
-        <li>Main app starts and begins sending data to the matrix</li>
-      </ul>
-    </li>
-    <li>Check service status:
-      <pre>sudo systemctl status deskradar deskradar-lcd deskradar-configurator deskradar-bootstrap</pre>
-    </li>
-    <li>Watch live logs:
-      <pre>sudo journalctl -u deskradar -f</pre>
-    </li>
-  </ol>
-
-  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e0e0e0;">
-
-  <h2>Step 6 — Switch to Home WiFi</h2>
-
-  <p>For production use, you'll want both the Pi and the MatrixPortal on your home network instead of the Pi's AP.</p>
-
-  <ol>
-    <li>Connect your laptop/phone to the Pi's AP network (<code>deskradar</code> / <code>deskradaradsb</code>).</li>
-    <li>Open <code>http://10.42.0.50:5000</code> in a browser.</li>
-    <li>Enter your home WiFi SSID and password and submit.</li>
-    <li>The configurator connects the Pi to your home network, writes the credentials to the MatrixPortal's <code>wifi.txt</code> via the CIRCUITPY mount, and triggers a reboot.</li>
-    <li>After rebooting, both devices should appear on your home network. The Pi is reachable as <code>deskradar.local</code>.</li>
-  </ol>
-
-  <div class="note">If the WiFi switch fails, the Pi automatically restores the <code>deskradarAP</code> access point and reboots. You can reconnect to the AP and try again.</div>
-
-  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e0e0e0;">
-
-  <h2>Ongoing Configuration</h2>
-
-  <p>Once on your home network, access the web configurator at:</p>
-  <pre>http://deskradar.local:5000/config</pre>
-
-  <p>From here you can adjust display radius, altitude threshold, fade factor, location, and other settings. Saving restarts the main app automatically.</p>
-
-  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e0e0e0;">
-
-  <h2>Troubleshooting</h2>
-
-  <h3>LCD shows "resolving..." indefinitely</h3>
-  <p>The boot check cannot find <code>deskradar-portal.local</code>. Check that the MatrixPortal S3 is powered on and connected to the same network as the Pi. Verify with:</p>
-  <pre>ping deskradar-portal.local</pre>
-  <p>If it's unreachable, check the MatrixPortal's serial console for WiFi connection errors.</p>
-
-  <h3>Matrix display is blank</h3>
-  <p>Check that <code>MATRIX_HTTP_URL</code> in <code>/etc/deskradar/config.json</code> contains the correct IP. Verify the MatrixPortal is reachable:</p>
-  <pre>curl http://&lt;matrix-ip&gt;/ping</pre>
-  <p>Check the main app logs: <code>sudo journalctl -u deskradar -n 50</code></p>
-
-  <h3>No aircraft appearing</h3>
-  <p>Confirm dump1090 is receiving data:</p>
-  <pre>curl http://127.0.0.1:8080/data/aircraft.json | python3 -m json.tool | head -30</pre>
-  <p>Check that <code>LAT</code>, <code>LON</code>, and <code>DISPLAY_RADIUS_NM</code> are set correctly for your location. Aircraft must be within the configured radius and above <code>MIN_ALT</code>.</p>
-
-  <h3>Web configurator unreachable</h3>
-  <pre>sudo systemctl status deskradar-configurator
-sudo journalctl -u deskradar-configurator -n 30</pre>
-
-  <h3>I2C LCD not detected</h3>
-  <pre>sudo i2cdetect -y 1</pre>
-  <p>Address <code>7c</code> should appear. If not, check wiring (SDA=pin 3, SCL=pin 5, 3.3V power). Some LCD backpacks use address <code>27</code> or <code>3f</code> — if yours differs, update the address in <code>lcd/lib/LCD1602.py</code>.</p>
-
-  <h3>MatrixPortal keeps rebooting</h3>
-  <p>The 60-second watchdog reboots the device if no request arrives. If the main deskradar app is not running or cannot reach the MatrixPortal, the device will repeatedly reboot. Ensure <code>deskradar.service</code> is running and <code>MATRIX_HTTP_URL</code> is correct.</p>
-
-  <h3>WiFi switch left Pi on AP mode</h3>
-  <p>The switch failed and the Pi restored the AP. Connect to <code>deskradar</code> SSID and try again via <code>http://10.42.0.50:5000</code>. Check <code>sudo journalctl -u deskradar-configurator -n 50</code> for the failure reason.</p>
+  <p>The Adafruit MatrixPortal S3 firmware is installed separately from your Mac or Linux machine before first use. Instructions are in the <a href="source.html">Source</a> page under the <strong>deskradar-matrixportals3</strong> repository.</p>
 
 </div>
 </body>
