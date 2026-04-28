@@ -32,9 +32,13 @@
   <h1>Configuration Reference</h1>
   <p class="subtitle">All fields in <code>/etc/deskradar/config.json</code>.</p>
 
+<<<<<<< Updated upstream
   <p>The configuration file is read at startup by the main deskradar app and validated by a Pydantic model. If the file is missing or contains invalid values for active fields, the app will exit with an error. Extra compatibility fields may be present in the JSON and are ignored by the main app. Changes take effect after restarting the service (<code>sudo systemctl restart deskradar</code>). The web configurator at <code>http://deskradar.local:5000/config</code> handles saving and restarting automatically.</p>
 
   <h2>Example File</h2>
+=======
+<h2>Example of Config File</h2>
+>>>>>>> Stashed changes
 
 <pre>{
   "HARD_RESTART": false,
@@ -45,7 +49,6 @@
   "LCD_SEND_URL": "http://0.0.0.0:8010/display",
   "MATRIX_SIZE_PX": 64,
   "DISPLAY_RADIUS_NM": 25,
-  "DRAW_RETICULE": true,
   "MAX_HISTORY": 20,
   "POLL_CADENCE": 1,
   "FADE_FACTOR": 0.95,
@@ -78,6 +81,7 @@
 
   <h2>Network URLs</h2>
 
+<<<<<<< Updated upstream
   <table>
     <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
     <tbody>
@@ -97,9 +101,31 @@
   </table>
 
   <div class="note"><code>GET_URL</code>, <code>LCD_SEND_URL</code>, <code>MATRIX_HTTP_URL</code>, and <code>HARD_RESTART</code> are hidden from the web configurator UI — they are managed by the system, preserved for compatibility, or rarely need manual changes.</div>
+=======
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>GET_URL</code></td><td>string</td><td><code>http://127.0.0.1:8080/data/aircraft.json</code></td>
+      <td>dump1090 API endpoint to poll for aircraft data. Usually local to the Pi.</td>
+    </tr>
+    <tr>
+      <td><code>MATRIX_HTTP_URL</code></td><td>string</td><td><em>set by boot_check</em></td>
+      <td>Base URL of the MatrixPortal S3. Written automatically at boot by resolving <code>deskradar-portal.local</code>. The boot check writes <code>http://&lt;ip&gt;:80</code>; the checked-in example value is only a startup placeholder.</td>
+    </tr>
+    <tr>
+      <td><code>LCD_SEND_URL</code></td><td>string</td><td><code>http://0.0.0.0:8010/display</code></td>
+      <td>URL of the LCD service endpoint. Points to the local deskradar-lcd FastAPI service.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note"><code>GET_URL</code>, <code>LCD_SEND_URL</code>, and <code>MATRIX_HTTP_URL</code> are hidden from the web configurator UI because they are managed by the system.</div>
+>>>>>>> Stashed changes
 
   <h2>Display</h2>
 
+<<<<<<< Updated upstream
   <table>
     <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
     <tbody>
@@ -125,9 +151,33 @@
       </tr>
     </tbody>
   </table>
+=======
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>MATRIX_SIZE_PX</code></td><td>int</td><td>64</td>
+      <td>Pixel dimensions used by the Pi for plotting. The current MatrixPortal firmware is hardcoded for a 64x64 display, so this should remain 64 unless the firmware is changed too.</td>
+    </tr>
+    <tr>
+      <td><code>DISPLAY_RADIUS_NM</code></td><td>int</td><td>25</td>
+      <td>Radius of the displayed area in nautical miles, centered on <code>LAT</code>/<code>LON</code>. Aircraft beyond this radius are not shown.</td>
+    </tr>
+    <tr>
+      <td><code>SHOW_CLOSEST</code></td><td>bool</td><td>true</td>
+      <td>Controls matrix recoloring for the head of the nearest current aircraft when more than one aircraft is present. The current LCD closest-aircraft display is not gated by this flag.</td>
+    </tr>
+    <tr>
+      <td><code>CLOSEST_COLOUR</code></td><td>object</td><td><code>{"r":255,"g":255,"b":255}</code></td>
+      <td>RGB color used to highlight the closest aircraft. Must include <code>r</code>, <code>g</code>, and <code>b</code> keys with values 0-255.</td>
+    </tr>
+  </tbody>
+</table>
+>>>>>>> Stashed changes
 
   <h2>Tracking</h2>
 
+<<<<<<< Updated upstream
   <table>
     <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
     <tbody>
@@ -177,6 +227,49 @@
       </tr>
     </tbody>
   </table>
+=======
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>MAX_HISTORY</code></td><td>int</td><td>20</td>
+      <td>Maximum number of historical position points retained per aircraft track.</td>
+    </tr>
+    <tr>
+      <td><code>POLL_CADENCE</code></td><td>float</td><td>1</td>
+      <td>Seconds between polling cycles.</td>
+    </tr>
+    <tr>
+      <td><code>FADE_FACTOR</code></td><td>float</td><td>0.95</td>
+      <td>Multiplier applied to trail point colors each cycle (0.0-1.0). 0.95 means each point's brightness drops by 5% per second at 1-second cadence. Lower values fade trails faster.</td>
+    </tr>
+    <tr>
+      <td><code>MIN_ALT</code></td><td>int</td><td>1000</td>
+      <td>Minimum altitude in feet for an aircraft to appear on screen. Filters out ground traffic and very-low-altitude aircraft.</td>
+    </tr>
+    <tr>
+      <td><code>MAX_UNSEEN_SECS</code></td><td>int</td><td>20</td>
+      <td>Seconds after the latest point before the track begins timing out. When this threshold is exceeded, the app pops one old point per cycle, marks the visible head red, and fades the trail.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Timeouts</h2>
+<p>Mostly debug stuff this</p>
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>MATRIX_HTTP_TIMEOUT</code></td><td>int</td><td>2</td>
+      <td>Seconds before HTTP requests to the MatrixPortal time out. Should be less than <code>POLL_CADENCE</code> to avoid blocking the loop.</td>
+    </tr>
+    <tr>
+      <td><code>LCD_TIMEOUT</code></td><td>int</td><td>1</td>
+      <td>Seconds before HTTP requests to the LCD service time out.</td>
+    </tr>
+  </tbody>
+</table>
+>>>>>>> Stashed changes
 
   <h2>Logging</h2>
 
@@ -190,6 +283,7 @@
     </tbody>
   </table>
 
+<<<<<<< Updated upstream
   <h2>Compatibility Fields</h2>
 
   <table>
@@ -226,3 +320,5 @@
 </div>
 </body>
 </html>
+=======
+>>>>>>> Stashed changes

@@ -29,15 +29,29 @@
 </nav>
 <div class="container">
 
+<<<<<<< Updated upstream
   <h1>DeskRadar</h1>
   <p class="subtitle">Real-time aircraft tracking on a 64×64 LED matrix display.</p>
 
   <p>DeskRadar is a hardware and software system that polls live ADS-B data from a local <a href="https://github.com/flightaware/dump1090">dump1090</a> receiver and renders nearby aircraft tracks on a 64×64 RGB LED matrix. Altitude is mapped to color, historical trails fade over time, and the closest aircraft can be highlighted while its callsign and altitude are shown on a 16×2 LCD display. The system runs on a Raspberry Pi alongside an Adafruit MatrixPortal S3 that drives the LED matrix.</p>
+=======
+<h1>DeskRadar</h1>
+<p class="subtitle">Real-time local ADS-B aircraft tracking on a 64x64 LED matrix display.</p>
+
+<figure class="home-hero">
+  <img src="{{ '/hero.jpg' | relative_url }}" alt="DeskRadar LED matrix display showing live aircraft tracks" width="3024" height="3024" loading="eager">
+</figure>
+
+<p>DeskRadar is a hardware and software system that reads aircraft data from a local dump1090 ADS-B output and renders nearby aircraft tracks on a 64x64 RGB LED matrix. The Raspberry Pi runs the RTL-SDR receiver, display calculation software and support services. An Adafruit MatrixPortal S3 drives the HUB75 matrix over HTTP.</p>
+
+<p>The main display shows each aircraft as a colored track. Position is mapped from latitude and longitude to matrix pixels, altitude is mapped to color, trails fade as the track ages, and duplicated pixels are collapsed so the highest aircraft wins when multiple points land on the same pixel. A 16x2 I2C LCD shows status messages and the current closest aircraft callsign/altitude.</p>
+>>>>>>> Stashed changes
 
   <figure class="hero-photo">
     <img src="media/deskradar-home.JPG" alt="DeskRadar showing live aircraft tracks on a 64 by 64 LED matrix with closest-aircraft details on the LCD.">
   </figure>
 
+<<<<<<< Updated upstream
   <h2>Components</h2>
 
   <div class="component-grid">
@@ -81,3 +95,10 @@
 </div>
 </body>
 </html>
+=======
+<p>The <strong>deskradar</strong> and <strong>deskradar-pi-services</strong> Python codebases were written by me, with AI used mostly for bug finding, code review, and help on some maths-heavy bits.</p>
+
+<p>The <strong>deskradar-matrixportals3</strong> CircuitPython firmware was more heavily AI-assisted because CircuitPython was less familiar territory, but the code was still reviewed and tested against the project hardware.</p>
+
+<p>This documentation site was written quickly with AI assistance and then checked against the local project repositories so the public docs match the code as closely as possible.</p>
+>>>>>>> Stashed changes

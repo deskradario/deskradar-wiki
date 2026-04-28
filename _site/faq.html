@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeskRadar — FAQ</title>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="stylesheet" href="style.css">
+  <title>DeskRadar - FAQ</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <nav>
@@ -14,31 +14,24 @@
       <span></span><span></span><span></span>
     </button>
     <ul>
-    <li><a href="index.html">Overview</a></li>
-    <li><a href="architecture.html">Architecture</a></li>
-    <li><a href="source.html">Source</a></li>
-    <li><a href="configuration.html">Configuration</a></li>
-    <li><a href="installation.html">Installation</a></li>
-    <li><a href="bill_of_materials.html">Bill of Materials</a></li>
-    <li><a href="stores.html">Stores</a></li>
-    <li><a href="contact.html">Contact</a></li>
-    <li><a href="faq.html" class="active">FAQ</a></li>
-    <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
+      <li><a href="/index.html">Overview</a></li>
+      <li><a href="/configuration.html">Configuration</a></li>
+      <li><a href="/faq.html" class="active">FAQ</a></li>
+      <li><a href="/architecture.html">Architecture</a></li>
+      <li><a href="/source.html">Source</a></li>
+      <li><a href="/installation.html">Installation</a></li>
+      <li><a href="/bill_of_materials.html">Bill of Materials</a></li>
+      <li><a href="/updates.html">Updates</a></li>
+      <li><a href="/guides.html">Guides</a></li>
+      <li><a href="/stores.html">Stores</a></li>
+      <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
     </ul>
   </div>
 </nav>
 <div class="container">
-
   <h1>FAQ</h1>
-  <p class="subtitle">Frequently asked questions.</p>
+<p class="subtitle">Frequently asked questions.</p>
 
-<<<<<<< Updated upstream
-  <p>Nobody's asked any questions yet.</p>
-
-</div>
-</body>
-</html>
-=======
 <h2>What data does DeskRadar use?</h2>
 <p>DeskRadar reads a local dump1090-style JSON feed from <code>http://127.0.0.1:8080/data/aircraft.json</code> by default. It does not draw every object in that feed, only those with enough data to draw and that are in range</p>
 
@@ -55,7 +48,7 @@
 <p>The firmware intentionally reboots if WiFi disconnects or if no HTTP request arrives for 60 seconds. The main app sends <code>/draw</code> when pixels change, <code>/no-change</code> when they do not, and <code>/empty</code> when there are no aircraft in the store.</p>
 
 <h2>What should be in MatrixPortal wifi.txt?</h2>
-<p>Exactly two lines: SSID on line 1 and password on line 2. The default file contains the Pi AP credentials. When moving to LAN, update it to the same WiFi network as the Pi. See <a href="{{ '/guides/moving-to-lan/' | relative_url }}">Moving to LAN</a>.</p>
+<p>Exactly two lines: SSID on line 1 and password on line 2. The default file contains the Pi AP credentials. When moving to LAN, update it to the same WiFi network as the Pi. See <a href="/guides/moving-to-lan/">Moving to LAN</a>.</p>
 
 <h2>Can I use Ethernet for the Pi?</h2>
 <p>The MatrixPortal still needs WiFi. The Pi can use Ethernet as long as it can reach the MatrixPortal over the same LAN and resolve or otherwise address <code>deskradar-portal.local</code>. The current configurator's WiFi switching flow is built around <code>wlan0</code> and NetworkManager.</p>
@@ -68,4 +61,7 @@
 
 <h2>What is the 2x2 grey dot in the middle?</h2>
 <p>The MatrixPortal firmware always redraws four constant centre pixels at <code>(31,31)</code>, <code>(31,32)</code>, <code>(32,31)</code>, and <code>(32,32)</code>. These mark the display centre.</p>
->>>>>>> Stashed changes
+
+</div>
+</body>
+</html>

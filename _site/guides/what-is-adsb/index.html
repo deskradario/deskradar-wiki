@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeskRadar - What Is ADS-B?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-burger">
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="const menu=this.nextElementSibling; const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
+      <span></span><span></span><span></span>
+    </button>
+    <ul>
+      <li><a href="/index.html">Overview</a></li>
+      <li><a href="/configuration.html">Configuration</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/architecture.html">Architecture</a></li>
+      <li><a href="/source.html">Source</a></li>
+      <li><a href="/installation.html">Installation</a></li>
+      <li><a href="/bill_of_materials.html">Bill of Materials</a></li>
+      <li><a href="/updates.html">Updates</a></li>
+      <li><a href="/guides.html" class="active">Guides</a></li>
+      <li><a href="/stores.html">Stores</a></li>
+      <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <article class="post">
+  
+  <h1>What Is ADS-B?</h1>
+  <p>ADS-B stands for Automatic Dependent Surveillance-Broadcast. In simple terms, an aircraft works out its own position, usually from satellite navigation, and broadcasts that position and other flight data by radio. A ground receiver can decode those messages without needing to ask the aircraft directly.</p>
+
+<h2 id="what-deskradar-receives">What DeskRadar Receives</h2>
+
+<p>DeskRadar does not decode raw radio messages itself. A local dump1090-style receiver does that job and exposes a JSON file at <code class="language-plaintext highlighter-rouge">/data/aircraft.json</code>. The main app polls that endpoint and keeps aircraft that include the fields it needs to draw a useful track:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Use in DeskRadar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lat</code> and <code class="language-plaintext highlighter-rouge">lon</code></td>
+      <td>Converted to matrix <code class="language-plaintext highlighter-rouge">x</code>/<code class="language-plaintext highlighter-rouge">y</code> pixels relative to the configured display centre.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">alt_geom</code></td>
+      <td>Used for altitude filtering, altitude color, stale-track behavior, and pixel conflict resolution.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">flight</code></td>
+      <td>Used as the per-flight store key and shown on the LCD for the closest aircraft.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hex</code></td>
+      <td>Aircraft identifier retained in each point.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">seen</code></td>
+      <td>Required by the sanitiser so the block is considered complete.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="why-some-aircraft-do-not-appear">Why Some Aircraft Do Not Appear</h2>
+
+<p>ADS-B reception is not the same as an internet flight tracking site. DeskRadar only knows what the local receiver can hear. Aircraft can be missing because the antenna cannot hear them, the message does not include position, the callsign is absent, the aircraft is below <code class="language-plaintext highlighter-rouge">MIN_ALT</code>, or the aircraft is outside the configured display radius.</p>
+
+<h2 id="1090-mhz-and-dump1090">1090 MHz and dump1090</h2>
+
+<p>Most DeskRadar builds are expected to use a 1090 MHz ADS-B receiver with dump1090 or a compatible decoder. dump1090 listens to the SDR, decodes messages, and publishes the live aircraft list. DeskRadar consumes that local JSON API rather than talking to the SDR directly.</p>
+
+<h2 id="how-ads-b-becomes-a-matrix-track">How ADS-B Becomes a Matrix Track</h2>
+
+<ol>
+  <li>The receiver hears aircraft broadcasts and dump1090 publishes JSON.</li>
+  <li>The Pi polls the JSON endpoint once per <code class="language-plaintext highlighter-rouge">POLL_CADENCE</code>.</li>
+  <li>The app drops incomplete, too-low, or out-of-bounds aircraft.</li>
+  <li>Latitude and longitude are mapped to a 64x64 pixel grid.</li>
+  <li>Altitude is converted to RGB color.</li>
+  <li>Historical points fade, gaps are filled, and duplicate pixels are collapsed.</li>
+  <li>The final pixel list is posted to the MatrixPortal <code class="language-plaintext highlighter-rouge">/draw</code> endpoint.</li>
+</ol>
+
+<div class="note">DeskRadar is a local display project, not an air traffic control system. It is limited by receiver coverage, ADS-B message content, local config, and the current filtering pipeline.</div>
+
+</article>
+
+</div>
+</body>
+</html>

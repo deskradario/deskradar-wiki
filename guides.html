@@ -1,0 +1,28 @@
+---
+layout: default
+title: Guides
+nav: guides
+permalink: /guides.html
+---
+
+<h1>Guides</h1>
+<p class="subtitle">Setup notes, background explainers, and practical DeskRadar workflows.</p>
+
+{% assign guides = site.guides | sort: "order" %}
+{% if guides.size > 0 %}
+  <div class="post-list">
+    {% for guide in guides %}
+      <article class="post-preview">
+        <p class="post-meta">Guide</p>
+        <h2><a href="{{ guide.url | relative_url }}">{{ guide.title }}</a></h2>
+        {% if guide.summary %}
+          <p>{{ guide.summary }}</p>
+        {% else %}
+          {{ guide.excerpt }}
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No guides yet.</p>
+{% endif %}

@@ -1,0 +1,17 @@
+title: DeskRadar
+description: Real-time aircraft tracking on a 64x64 LED matrix display.
+url: "https://deskradar.io"
+baseurl: ""
+
+permalink: /updates/:year/:month/:day/:title/
+markdown: kramdown
+
+collections:
+  guides:
+    output: true
+    permalink: /guides/:name/
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor

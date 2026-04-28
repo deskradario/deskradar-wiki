@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeskRadar - Moving to LAN</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-burger">
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="const menu=this.nextElementSibling; const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
+      <span></span><span></span><span></span>
+    </button>
+    <ul>
+      <li><a href="/index.html">Overview</a></li>
+      <li><a href="/configuration.html">Configuration</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/architecture.html">Architecture</a></li>
+      <li><a href="/source.html">Source</a></li>
+      <li><a href="/installation.html">Installation</a></li>
+      <li><a href="/bill_of_materials.html">Bill of Materials</a></li>
+      <li><a href="/updates.html">Updates</a></li>
+      <li><a href="/guides.html" class="active">Guides</a></li>
+      <li><a href="/stores.html">Stores</a></li>
+      <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <article class="post">
+  
+  <h1>Moving to LAN</h1>
+  <p>The Pi and MatrixPortal must be on the same network. The Pi can create its own setup AP, but normal running is easier when both devices join your LAN. The web configurator can do this for you when the MatrixPortal CIRCUITPY drive is mounted on the Pi. This page documents the manual flow.</p>
+
+<div class="warning">If you are SSHed into the Pi through the <code>deskradar</code> AP, switching WiFi will disconnect you. Use a local keyboard/monitor, serial console, or be ready to reconnect through the LAN IP once the Pi joins your router.</div>
+
+<h2 id="1-check-the-current-network-state">1. Check the Current Network State</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmcli device status
+nmcli connection show <span class="nt">--active</span>
+nmcli device wifi list
+</code></pre></div></div>
+
+<p>The setup AP connection is named <code class="language-plaintext highlighter-rouge">deskradarAP</code>. The SSID it broadcasts is <code class="language-plaintext highlighter-rouge">deskradar</code>.</p>
+
+<h2 id="2-connect-the-pi-to-your-lan-wifi">2. Connect the Pi to Your LAN WiFi</h2>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">YourSSID</code> and <code class="language-plaintext highlighter-rouge">YourPassword</code> with your router’s WiFi credentials. If a saved connection with the same name already exists, delete it first so NetworkManager uses the new password.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nmcli connection delete <span class="s2">"YourSSID"</span>
+<span class="nb">sudo </span>nmcli device disconnect wlan0
+<span class="nb">sudo </span>nmcli device wifi rescan
+<span class="nb">sudo </span>nmcli device wifi connect <span class="s2">"YourSSID"</span> password <span class="s2">"YourPassword"</span> ifname wlan0
+</code></pre></div></div>
+
+<p>If <code class="language-plaintext highlighter-rouge">connection delete</code> reports that the connection does not exist, that is fine. Run the remaining commands.</p>
+
+<p>Confirm the Pi is connected and has an IP:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmcli connection show <span class="nt">--active</span>
+<span class="nb">hostname</span> <span class="nt">-I</span>
+</code></pre></div></div>
+
+<h2 id="3-if-it-fails-bring-back-the-ap">3. If It Fails, Bring Back the AP</h2>
+
+<p>If the Pi fails to join your LAN, bring the setup AP back up:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nmcli connection up deskradarAP
+</code></pre></div></div>
+
+<p>You can then reconnect to SSID <code class="language-plaintext highlighter-rouge">deskradar</code> with password <code class="language-plaintext highlighter-rouge">deskradaradsb</code> and try again.</p>
+
+<h2 id="4-mount-the-matrixportal-circuitpy-drive">4. Mount the MatrixPortal CIRCUITPY Drive</h2>
+
+<p>Connect the MatrixPortal S3 to the Pi by USB so its CircuitPython storage appears under <code class="language-plaintext highlighter-rouge">/media/deskradar/</code>. It may be named <code class="language-plaintext highlighter-rouge">CIRCUITPY</code>, <code class="language-plaintext highlighter-rouge">CIRCUITPY1</code>, or similar.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> /media/deskradar
+findmnt
+</code></pre></div></div>
+
+<p>Use the active mounted CIRCUITPY path in the next step.</p>
+
+<h2 id="5-update-matrixportal-wifitxt">5. Update MatrixPortal wifi.txt</h2>
+
+<p>Only update <code class="language-plaintext highlighter-rouge">wifi.txt</code> after the Pi has successfully joined the LAN WiFi. The file must contain only two lines: SSID, then password. No labels, quotes, or extra text.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">printf</span> <span class="s1">'%s\n%s'</span> <span class="s1">'YourSSID'</span> <span class="s1">'YourPassword'</span> | <span class="nb">sudo tee</span> /media/deskradar/CIRCUITPY/wifi.txt <span class="o">&gt;</span>/dev/null
+<span class="nb">sync</span>
+</code></pre></div></div>
+
+<p>If your mounted volume is <code class="language-plaintext highlighter-rouge">CIRCUITPY1</code> or another suffix, change the path:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">printf</span> <span class="s1">'%s\n%s'</span> <span class="s1">'YourSSID'</span> <span class="s1">'YourPassword'</span> | <span class="nb">sudo tee</span> /media/deskradar/CIRCUITPY1/wifi.txt <span class="o">&gt;</span>/dev/null
+<span class="nb">sync</span>
+</code></pre></div></div>
+
+<h2 id="6-restart-the-matrixportal-and-refresh-the-pi-config">6. Restart the MatrixPortal and Refresh the Pi Config</h2>
+
+<p>Reset or power-cycle the MatrixPortal. It should join the same LAN WiFi and advertise <code class="language-plaintext highlighter-rouge">deskradar-portal.local</code>. Then run the Pi boot check and restart the main app so <code class="language-plaintext highlighter-rouge">MATRIX_HTTP_URL</code> points to the MatrixPortal’s LAN IP:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start deskradar-bootstrap
+<span class="nb">sudo </span>systemctl restart deskradar
+</code></pre></div></div>
+
+<p>Check the resolved URL in the config:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep </span>MATRIX_HTTP_URL /etc/deskradar/config.json
+</code></pre></div></div>
+
+<p>The value should look like <code class="language-plaintext highlighter-rouge">http://192.168.x.x:80</code> or another address from your LAN.</p>
+
+<h2 id="what-the-web-configurator-does">What the Web Configurator Does</h2>
+
+<p>The configurator route <code class="language-plaintext highlighter-rouge">/switch-to-lan</code> follows the same idea in code: delete any existing connection named after the SSID, disconnect <code class="language-plaintext highlighter-rouge">wlan0</code>, connect with <code class="language-plaintext highlighter-rouge">nmcli device wifi connect</code>, and write MatrixPortal <code class="language-plaintext highlighter-rouge">wifi.txt</code> only after the Pi has connected. On failure it attempts to bring <code class="language-plaintext highlighter-rouge">deskradarAP</code> back and reboots without changing the MatrixPortal credentials.</p>
+
+</article>
+
+</div>
+</body>
+</html>
