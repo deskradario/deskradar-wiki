@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DeskRadar — Source</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <nav>
   <div class="nav-burger">
-    <button class="nav-toggle" aria-label="Menu" onclick="this.nextElementSibling.classList.toggle('open')">
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="const menu=this.nextElementSibling; const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
       <span></span><span></span><span></span>
     </button>
     <ul>
@@ -20,6 +21,9 @@
     <li><a href="installation.html">Installation</a></li>
     <li><a href="bill_of_materials.html">Bill of Materials</a></li>
     <li><a href="stores.html">Stores</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
     </ul>
   </div>
 </nav>
@@ -29,19 +33,24 @@
   <p class="subtitle">All DeskRadar repositories and what they do.</p>
 
   <h2>deskradar</h2>
-  <p>The main Python application. Runs on the Raspberry Pi, polls ADS-B data from a local dump1090 instance every second, processes aircraft tracks through a 10-stage pipeline, and sends pixel draw commands to the MatrixPortal S3 over HTTP. Also manages the LCD display via the lcd service.</p>
+  <p>The main Python application. Runs on the Raspberry Pi, polls ADS-B data from a local dump1090 instance every second by default, processes aircraft tracks through a 10-stage pipeline, and sends pixel draw commands to the MatrixPortal S3 over HTTP. It also sends the closest aircraft callsign and altitude to the LCD service.</p>
   <p><strong>Language:</strong> Python 3.13 &nbsp;|&nbsp; <strong>Runs on:</strong> Raspberry Pi OS (Bookworm)</p>
   <p><a href="https://github.com/deskradario/deskradar">github.com/deskradario/deskradar</a></p>
 
   <h2>deskradar-pi-services</h2>
-  <p>Supporting services that run alongside the main app on the Pi. Includes a FastAPI server that drives the 16×2 I2C LCD display, a Flask web configurator for changing settings and switching WiFi networks, and a one-shot boot service that resolves the MatrixPortal's mDNS address and writes it to the config file before the main app starts.</p>
+  <p>Supporting services that run alongside the main app on the Pi. Includes a FastAPI server that drives the 16×2 I2C LCD display, a Flask web configurator for changing settings and switching WiFi networks, and a one-shot boot service that resolves the MatrixPortal's mDNS address and writes it to the config file. The main app and configurator are ordered after bootstrap, but are not blocked if bootstrap fails.</p>
   <p><strong>Language:</strong> Python &nbsp;|&nbsp; <strong>Managed by:</strong> systemd</p>
   <p><a href="https://github.com/deskradario/deskradar-pi-services">github.com/deskradario/deskradar-pi-services</a></p>
 
   <h2>deskradar-matrixportals3</h2>
-  <p>CircuitPython firmware for the Adafruit MatrixPortal S3. The device connects to WiFi, advertises itself via mDNS as <code>deskradar-portal.local</code>, and runs an HTTP server on port 80 that accepts pixel draw commands from the Pi. On receiving a <code>/draw</code> request it renders the pixel data to the 64×64 HUB75 LED matrix. A watchdog reboots the device if no request arrives within 60 seconds.</p>
+  <p>CircuitPython firmware for the Adafruit MatrixPortal S3. The device reads <code>wifi.txt</code>, connects to WiFi, advertises itself via mDNS as <code>deskradar-portal.local</code>, and runs an HTTP server on port 80. It supports <code>/ping</code>, <code>/draw</code>, <code>/empty</code>, <code>/no-change</code>, and <code>/add-constant</code>. On receiving a <code>/draw</code> request it renders the pixel data to the 64×64 HUB75 LED matrix and redraws the fixed 2×2 grey center marker. A watchdog reboots the device if no request arrives within 60 seconds.</p>
   <p><strong>Language:</strong> CircuitPython &nbsp;|&nbsp; <strong>Hardware:</strong> Adafruit MatrixPortal S3 + 64×64 HUB75 LED matrix</p>
   <p><a href="https://github.com/deskradario/deskradar-matrixportals3">github.com/deskradario/deskradar-matrixportals3</a></p>
+
+  <h3>Firmware install</h3>
+  <p>Copy the contents of <code>src/</code> to the CIRCUITPY volume. The bundled installer is the macOS path variant:</p>
+  <pre>cd deskradar-matrixportals3
+./install.sh</pre>
 
 </div>
 </body>

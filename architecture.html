@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DeskRadar — Architecture</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <nav>
   <div class="nav-burger">
-    <button class="nav-toggle" aria-label="Menu" onclick="this.nextElementSibling.classList.toggle('open')">
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="const menu=this.nextElementSibling; const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
       <span></span><span></span><span></span>
     </button>
     <ul>
@@ -20,13 +21,15 @@
     <li><a href="installation.html">Installation</a></li>
     <li><a href="bill_of_materials.html">Bill of Materials</a></li>
     <li><a href="stores.html">Stores</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
     </ul>
   </div>
 </nav>
 <div class="container">
 
   <h1>Architecture</h1>
-  <p class="subtitle">How the components connect, the boot sequence, and the data flow.</p>
 
   <h2>Network Topology</h2>
 
@@ -42,7 +45,7 @@
                                             also on this AP</pre>
 
   <h3>LAN Mode</h3>
-  <p>Once a home WiFi network is configured via the web UI, both the Pi and the MatrixPortal join it. The Pi's boot service resolves <code>deskradar-portal.local</code> via mDNS to find the MatrixPortal's IP and writes it to the config file.</p>
+  <p>Once a home WiFi network is configured via the web UI, the Pi connects to it and writes the same credentials to <code>wifi.txt</code> on a mounted CIRCUITPY volume. The MatrixPortal uses those credentials on its next boot or reload. The Pi's boot service resolves <code>deskradar-portal.local</code> via mDNS to find the MatrixPortal's IP and writes it to the config file.</p>
 
   <pre>
   Home Router ──── Pi (deskradar.local)
@@ -50,7 +53,7 @@
 
   <h2>Boot Sequence</h2>
 
-  <p>systemd enforces this ordering on every Pi boot:</p>
+  <p>systemd orders the services this way on a normal Pi boot. The main app and configurator are ordered after bootstrap, but they do not require bootstrap to succeed.</p>
 
   <pre>
   1. deskradar-lcd.service starts
@@ -60,7 +63,7 @@
      ├─ Waits 10 seconds for network to stabilise
      ├─ Resolves deskradar-portal.local (retries every 2s, 30s timeout)
      ├─ Sends status updates to LCD service throughout
-     └─ Writes resolved IP to /etc/deskradar/config.json as MATRIX_HTTP_URL
+     └─ Writes http://&lt;resolved-ip&gt;:80 to /etc/deskradar/config.json as MATRIX_HTTP_URL
 
   3. deskradar.service starts (after bootstrap + network-online)
      └─ Main aircraft tracking app, reads config, polls dump1090
@@ -88,10 +91,40 @@
   <table>
     <thead><tr><th>Service</th><th>Type</th><th>Restart</th><th>User</th></tr></thead>
     <tbody>
-      <tr><td><code>deskradar-lcd</code></td><td>simple</td><td>always</td><td>(default)</td></tr>
-      <tr><td><code>deskradar-bootstrap</code></td><td>oneshot</td><td>on-failure</td><td>root</td></tr>
+      <tr><td><code>deskradar-lcd</code></td><td>simple</td><td>always</td><td>root (implicit)</td></tr>
+      <tr><td><code>deskradar-bootstrap</code></td><td>oneshot</td><td>none</td><td>root</td></tr>
       <tr><td><code>deskradar</code></td><td>simple</td><td>always</td><td>root</td></tr>
-      <tr><td><code>deskradar-configurator</code></td><td>simple</td><td>always</td><td>(default)</td></tr>
+      <tr><td><code>deskradar-configurator</code></td><td>simple</td><td>always</td><td>root (implicit)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Filesystem Layout</h2>
+
+  <h3>Raspberry Pi</h3>
+
+  <table>
+    <thead><tr><th>Path</th><th>Repo</th></tr></thead>
+    <tbody>
+      <tr><td><code>/opt/deskradar/</code></td><td>deskradar</td></tr>
+      <tr><td><code>/opt/deskradar-pi-services/</code></td><td>deskradar-pi-services</td></tr>
+      <tr><td><code>/etc/deskradar/config.json</code></td><td>—</td></tr>
+      <tr><td><code>/etc/systemd/system/deskradar.service</code></td><td>—</td></tr>
+      <tr><td><code>/etc/systemd/system/deskradar-lcd.service</code></td><td>—</td></tr>
+      <tr><td><code>/etc/systemd/system/deskradar-configurator.service</code></td><td>—</td></tr>
+      <tr><td><code>/etc/systemd/system/deskradar-bootstrap.service</code></td><td>—</td></tr>
+      <tr><td><code>/etc/sudoers.d/deskradar-nmcli</code></td><td>—</td></tr>
+      <tr><td><code>/media/deskradar/CIRCUITPY*/</code></td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>MatrixPortal S3 (CIRCUITPY volume)</h3>
+
+  <table>
+    <thead><tr><th>Path</th><th>Repo</th></tr></thead>
+    <tbody>
+      <tr><td><code>code.py</code></td><td>deskradar-matrixportals3</td></tr>
+      <tr><td><code>wifi.txt</code></td><td>—</td></tr>
+      <tr><td><code>lib/</code></td><td>deskradar-matrixportals3</td></tr>
     </tbody>
   </table>
 
@@ -120,13 +153,13 @@
   │  1. clear_hidden()             remove deferred smoothing flags
   │  2. clear_closest_marker()     reset previous closest colour
   │  3. enforce_max_history()      trim to MAX_HISTORY points
-  │  4. enforce_max_time()         remove if unseen > MAX_UNSEEN_SECS
+  │  4. enforce_max_time()         pop oldest point if latest update is older than MAX_UNSEEN_SECS
   │  5. plot()                     lat/lon → pixel coordinates
   │  6. remove_latest_dupe()       drop points at same pixel (within 500ft alt)
   │  7. fill_gaps()                interpolate across gaps > 1 pixel
   │  8. smooth_steps_deferred_head() remove 90° corners from track
-  │  9. add_colour()               altitude → RGB (white→yellow→green→blue→purple→red)
-  │ 10. fade()                     dim trail colours by FADE_FACTOR each cycle
+  │  9. add_colour()               altitude → RGB; stale visible head turns red after MAX_UNSEEN_SECS
+  │ 10. fade()                     dim trail colours when a new point arrives or a stale point is popped
         │
         ▼
   extract_draw()
@@ -137,27 +170,27 @@
         │    or send_no_change() if pixel data unchanged
         │
         └──► manage_closest()  HTTP POST /display to LCD service
-             (sends closest aircraft callsign + spinner)</pre>
+             (sends closest aircraft callsign + altitude + spinner)</pre>
 
   <h2>Altitude Color Mapping</h2>
 
-  <p>The <code>radar_altitude_to_rgb()</code> function maps altitude (0–42,000 ft) to a smooth gradient across 8 stops. Colors are linearly interpolated between stops:</p>
+  <p>The <code>radar_altitude_to_rgb()</code> function maps altitude (0-42,000 ft) to a smooth gradient across 8 stops. Colors are linearly interpolated between these implementation stops:</p>
 
   <table>
     <thead><tr><th>Altitude</th><th>Color</th><th>RGB</th></tr></thead>
     <tbody>
       <tr><td>0 ft</td><td>White</td><td>255, 255, 255</td></tr>
-      <tr><td>6,000 ft</td><td>Yellow</td><td>255, 255, 0</td></tr>
-      <tr><td>12,000 ft</td><td>Green</td><td>0, 200, 0</td></tr>
-      <tr><td>18,000 ft</td><td>Light Blue</td><td>0, 200, 255</td></tr>
-      <tr><td>24,000 ft</td><td>Mid Blue</td><td>0, 80, 255</td></tr>
-      <tr><td>30,000 ft</td><td>Dark Blue</td><td>0, 0, 200</td></tr>
-      <tr><td>36,000 ft</td><td>Purple</td><td>150, 0, 200</td></tr>
+      <tr><td>840 ft</td><td>Yellow</td><td>255, 255, 0</td></tr>
+      <tr><td>4,200 ft</td><td>Green</td><td>0, 255, 0</td></tr>
+      <tr><td>10,500 ft</td><td>Light Blue</td><td>0, 255, 255</td></tr>
+      <tr><td>21,000 ft</td><td>Dark Blue</td><td>0, 0, 255</td></tr>
+      <tr><td>31,500 ft</td><td>Purple</td><td>128, 0, 128</td></tr>
+      <tr><td>37,800 ft</td><td>Deeper Purple</td><td>160, 0, 160</td></tr>
       <tr><td>42,000 ft</td><td>Red</td><td>255, 0, 0</td></tr>
     </tbody>
   </table>
 
-  <p>Stale aircraft (seen but not updated recently) are rendered in red regardless of altitude. The closest aircraft is recolored to <code>CLOSEST_COLOUR</code> (white by default).</p>
+  <p>When an aircraft has not updated for longer than <code>MAX_UNSEEN_SECS</code>, the oldest point is popped on each cycle and the visible head is rendered red while the track disappears. The closest aircraft is recolored to <code>CLOSEST_COLOUR</code> only when <code>SHOW_CLOSEST</code> is enabled and there is more than one active track.</p>
 
   <h2>LCD Display Protocol</h2>
 

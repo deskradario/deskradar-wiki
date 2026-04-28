@@ -171,6 +171,18 @@ li { margin-bottom: 0.3rem; }
   margin-bottom: 2rem;
 }
 
+.hero-photo {
+  margin: 1.5rem 0 2rem;
+}
+
+.hero-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
 .component-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -216,4 +228,9 @@ li { margin-bottom: 0.3rem; }
 @media (max-width: 600px) {
   h1 { font-size: 1.5rem; }
   .container { padding: 1.25rem 1rem 3rem; }
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
