@@ -205,6 +205,36 @@ li { margin-bottom: 0.3rem; }
   font-size: 0.9rem;
 }
 
+.post-list {
+  margin-top: 1.5rem;
+}
+
+.post-preview {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1.25rem 0;
+}
+
+.post-preview:first-child {
+  padding-top: 0;
+}
+
+.post-preview h2 {
+  border-bottom: none;
+  margin: 0 0 0.5rem;
+  padding-bottom: 0;
+}
+
+.post-preview p:last-child,
+.post p:last-child {
+  margin-bottom: 0;
+}
+
+.post-meta {
+  color: #666;
+  font-size: 0.875rem;
+  margin-bottom: 0.35rem;
+}
+
 .warning {
   background: #fff8e1;
   border-left: 3px solid #f0a500;

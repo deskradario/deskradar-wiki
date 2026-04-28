@@ -1,38 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeskRadar — Configuration</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<nav>
-  <div class="nav-burger">
-    <button class="nav-toggle" aria-label="Menu" onclick="this.nextElementSibling.classList.toggle('open')">
-      <span></span><span></span><span></span>
-    </button>
-    <ul>
-    <li><a href="index.html">Overview</a></li>
-    <li><a href="architecture.html">Architecture</a></li>
-    <li><a href="source.html">Source</a></li>
-    <li><a href="configuration.html" class="active">Configuration</a></li>
-    <li><a href="installation.html">Installation</a></li>
-    <li><a href="bill_of_materials.html">Bill of Materials</a></li>
-    <li><a href="stores.html">Stores</a></li>
-    </ul>
-  </div>
-</nav>
-<div class="container">
+---
+layout: default
+title: Configuration
+nav: configuration
+permalink: /configuration.html
+---
 
-  <h1>Configuration Reference</h1>
-  <p class="subtitle">All fields in <code>/etc/deskradar/config.json</code>.</p>
+<h1>Configuration Reference</h1>
+<p class="subtitle">All fields in <code>/etc/deskradar/config.json</code>.</p>
 
-  <p>The configuration file is read at startup by the main deskradar app and validated by a Pydantic model. If the file is missing or contains invalid values, the app will exit with an error. Changes take effect after restarting the service (<code>sudo systemctl restart deskradar</code>). The web configurator at <code>http://deskradar.local:5000/config</code> handles saving and restarting automatically.</p>
+<p>The configuration file is read at startup by the main deskradar app and validated by a Pydantic model. If the file is missing or contains invalid values, the app will exit with an error. Changes take effect after restarting the service (<code>sudo systemctl restart deskradar</code>). The web configurator at <code>http://deskradar.local:5000/config</code> handles saving and restarting automatically.</p>
 
-  <h2>Example File</h2>
+<h2>Example File</h2>
 
-  <pre>{
+<pre>{
   "LAT": 50,
   "LON": 0,
   "GET_URL": "http://127.0.0.1:8080/data/aircraft.json",
@@ -55,157 +35,153 @@
   "LOG_LEVEL": "info"
 }</pre>
 
-  <h2>Location</h2>
+<h2>Location</h2>
 
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>LAT</code></td><td>float</td><td>50</td>
-        <td>Latitude of the display center in decimal degrees. Aircraft are plotted relative to this point.</td>
-      </tr>
-      <tr>
-        <td><code>LON</code></td><td>float</td><td>0</td>
-        <td>Longitude of the display center in decimal degrees.</td>
-      </tr>
-    </tbody>
-  </table>
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>LAT</code></td><td>float</td><td>50</td>
+      <td>Latitude of the display center in decimal degrees. Aircraft are plotted relative to this point.</td>
+    </tr>
+    <tr>
+      <td><code>LON</code></td><td>float</td><td>0</td>
+      <td>Longitude of the display center in decimal degrees.</td>
+    </tr>
+  </tbody>
+</table>
 
-  <h2>Network URLs</h2>
+<h2>Network URLs</h2>
 
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>GET_URL</code></td><td>string</td><td><code>http://127.0.0.1:8080/data/aircraft.json</code></td>
-        <td>dump1090 API endpoint to poll for aircraft data. Usually local to the Pi.</td>
-      </tr>
-      <tr>
-        <td><code>MATRIX_HTTP_URL</code></td><td>string</td><td><em>set by boot_check</em></td>
-        <td>Base URL of the MatrixPortal S3. Written automatically at boot by resolving <code>deskradar-portal.local</code>. Format: <code>http://&lt;ip&gt;</code> (no trailing slash, no port — port 80 is used).</td>
-      </tr>
-      <tr>
-        <td><code>LCD_SEND_URL</code></td><td>string</td><td><code>http://0.0.0.0:8010/display</code></td>
-        <td>URL of the LCD service endpoint. Points to the local deskradar-lcd FastAPI service.</td>
-      </tr>
-    </tbody>
-  </table>
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>GET_URL</code></td><td>string</td><td><code>http://127.0.0.1:8080/data/aircraft.json</code></td>
+      <td>dump1090 API endpoint to poll for aircraft data. Usually local to the Pi.</td>
+    </tr>
+    <tr>
+      <td><code>MATRIX_HTTP_URL</code></td><td>string</td><td><em>set by boot_check</em></td>
+      <td>Base URL of the MatrixPortal S3. Written automatically at boot by resolving <code>deskradar-portal.local</code>. Format: <code>http://&lt;ip&gt;</code> (no trailing slash, no port — port 80 is used).</td>
+    </tr>
+    <tr>
+      <td><code>LCD_SEND_URL</code></td><td>string</td><td><code>http://0.0.0.0:8010/display</code></td>
+      <td>URL of the LCD service endpoint. Points to the local deskradar-lcd FastAPI service.</td>
+    </tr>
+  </tbody>
+</table>
 
-  <div class="note"><code>GET_URL</code>, <code>LCD_SEND_URL</code>, and <code>MATRIX_HTTP_URL</code> are hidden from the web configurator UI — they are managed by the system or rarely need manual changes.</div>
+<div class="note"><code>GET_URL</code>, <code>LCD_SEND_URL</code>, and <code>MATRIX_HTTP_URL</code> are hidden from the web configurator UI — they are managed by the system or rarely need manual changes.</div>
 
-  <h2>Display</h2>
+<h2>Display</h2>
 
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>MATRIX_SIZE_PX</code></td><td>int</td><td>64</td>
-        <td>Pixel dimensions of the LED matrix (width and height). The matrix is assumed to be square.</td>
-      </tr>
-      <tr>
-        <td><code>DISPLAY_RADIUS_NM</code></td><td>float</td><td>25</td>
-        <td>Radius of the displayed area in nautical miles, centered on <code>LAT</code>/<code>LON</code>. Aircraft beyond this radius are not shown.</td>
-      </tr>
-      <tr>
-        <td><code>DRAW_RETICULE</code></td><td>bool</td><td>true</td>
-        <td>Draw a crosshair/reticule at the display center to indicate the reference location.</td>
-      </tr>
-      <tr>
-        <td><code>SHOW_CLOSEST</code></td><td>bool</td><td>true</td>
-        <td>Highlight the nearest aircraft in <code>CLOSEST_COLOUR</code> and display its callsign on the LCD.</td>
-      </tr>
-      <tr>
-        <td><code>CLOSEST_COLOUR</code></td><td>object</td><td><code>{"r":255,"g":255,"b":255}</code></td>
-        <td>RGB color used to highlight the closest aircraft. Must include <code>r</code>, <code>g</code>, and <code>b</code> keys with values 0–255.</td>
-      </tr>
-    </tbody>
-  </table>
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>MATRIX_SIZE_PX</code></td><td>int</td><td>64</td>
+      <td>Pixel dimensions of the LED matrix (width and height). The matrix is assumed to be square.</td>
+    </tr>
+    <tr>
+      <td><code>DISPLAY_RADIUS_NM</code></td><td>float</td><td>25</td>
+      <td>Radius of the displayed area in nautical miles, centered on <code>LAT</code>/<code>LON</code>. Aircraft beyond this radius are not shown.</td>
+    </tr>
+    <tr>
+      <td><code>DRAW_RETICULE</code></td><td>bool</td><td>true</td>
+      <td>Draw a crosshair/reticule at the display center to indicate the reference location.</td>
+    </tr>
+    <tr>
+      <td><code>SHOW_CLOSEST</code></td><td>bool</td><td>true</td>
+      <td>Highlight the nearest aircraft in <code>CLOSEST_COLOUR</code> and display its callsign on the LCD.</td>
+    </tr>
+    <tr>
+      <td><code>CLOSEST_COLOUR</code></td><td>object</td><td><code>{"r":255,"g":255,"b":255}</code></td>
+      <td>RGB color used to highlight the closest aircraft. Must include <code>r</code>, <code>g</code>, and <code>b</code> keys with values 0–255.</td>
+    </tr>
+  </tbody>
+</table>
 
-  <h2>Tracking</h2>
+<h2>Tracking</h2>
 
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>MAX_HISTORY</code></td><td>int</td><td>20</td>
-        <td>Maximum number of historical position points retained per aircraft track. Older points are dropped from the tail of the list.</td>
-      </tr>
-      <tr>
-        <td><code>POLL_CADENCE</code></td><td>float</td><td>1</td>
-        <td>Seconds between polling cycles. Lower values increase responsiveness but also CPU and network load.</td>
-      </tr>
-      <tr>
-        <td><code>FADE_FACTOR</code></td><td>float</td><td>0.95</td>
-        <td>Multiplier applied to trail point colors each cycle (0.0–1.0). 0.95 means each point's brightness drops by 5% per second at 1-second cadence. Lower values fade trails faster.</td>
-      </tr>
-      <tr>
-        <td><code>MIN_ALT</code></td><td>int</td><td>1000</td>
-        <td>Minimum altitude in feet for an aircraft to appear on screen. Filters out ground traffic and very-low-altitude aircraft.</td>
-      </tr>
-      <tr>
-        <td><code>UNSEEN_MARK_SECS</code></td><td>int</td><td>10</td>
-        <td>Seconds without a new position update before an aircraft's trail is colored red (stale indicator).</td>
-      </tr>
-      <tr>
-        <td><code>MAX_UNSEEN_SECS</code></td><td>int</td><td>20</td>
-        <td>Seconds without any update before an aircraft is removed from the display entirely.</td>
-      </tr>
-      <tr>
-        <td><code>LONLAT_DECIMALS</code></td><td>int</td><td>3</td>
-        <td>Decimal precision used when rounding lat/lon values during data processing. 3 gives ~110 m resolution.</td>
-      </tr>
-    </tbody>
-  </table>
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>MAX_HISTORY</code></td><td>int</td><td>20</td>
+      <td>Maximum number of historical position points retained per aircraft track. Older points are dropped from the tail of the list.</td>
+    </tr>
+    <tr>
+      <td><code>POLL_CADENCE</code></td><td>float</td><td>1</td>
+      <td>Seconds between polling cycles. Lower values increase responsiveness but also CPU and network load.</td>
+    </tr>
+    <tr>
+      <td><code>FADE_FACTOR</code></td><td>float</td><td>0.95</td>
+      <td>Multiplier applied to trail point colors each cycle (0.0–1.0). 0.95 means each point's brightness drops by 5% per second at 1-second cadence. Lower values fade trails faster.</td>
+    </tr>
+    <tr>
+      <td><code>MIN_ALT</code></td><td>int</td><td>1000</td>
+      <td>Minimum altitude in feet for an aircraft to appear on screen. Filters out ground traffic and very-low-altitude aircraft.</td>
+    </tr>
+    <tr>
+      <td><code>UNSEEN_MARK_SECS</code></td><td>int</td><td>10</td>
+      <td>Seconds without a new position update before an aircraft's trail is colored red (stale indicator).</td>
+    </tr>
+    <tr>
+      <td><code>MAX_UNSEEN_SECS</code></td><td>int</td><td>20</td>
+      <td>Seconds without any update before an aircraft is removed from the display entirely.</td>
+    </tr>
+    <tr>
+      <td><code>LONLAT_DECIMALS</code></td><td>int</td><td>3</td>
+      <td>Decimal precision used when rounding lat/lon values during data processing. 3 gives ~110 m resolution.</td>
+    </tr>
+  </tbody>
+</table>
 
-  <h2>Timeouts</h2>
+<h2>Timeouts</h2>
 
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>MATRIX_HTTP_TIMEOUT</code></td><td>int</td><td>2</td>
-        <td>Seconds before HTTP requests to the MatrixPortal time out. Should be less than <code>POLL_CADENCE</code> to avoid blocking the loop.</td>
-      </tr>
-      <tr>
-        <td><code>LCD_TIMEOUT</code></td><td>int</td><td>1</td>
-        <td>Seconds before HTTP requests to the LCD service time out.</td>
-      </tr>
-    </tbody>
-  </table>
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>MATRIX_HTTP_TIMEOUT</code></td><td>int</td><td>2</td>
+      <td>Seconds before HTTP requests to the MatrixPortal time out. Should be less than <code>POLL_CADENCE</code> to avoid blocking the loop.</td>
+    </tr>
+    <tr>
+      <td><code>LCD_TIMEOUT</code></td><td>int</td><td>1</td>
+      <td>Seconds before HTTP requests to the LCD service time out.</td>
+    </tr>
+  </tbody>
+</table>
 
-  <h2>Logging</h2>
+<h2>Logging</h2>
 
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Allowed Values</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>LOG_LEVEL</code></td><td>string</td><td><code>"info"</code></td>
-        <td><code>debug</code>, <code>info</code>, <code>warning</code>, <code>error</code>, <code>critical</code> (case-insensitive)</td>
-      </tr>
-    </tbody>
-  </table>
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Allowed Values</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>LOG_LEVEL</code></td><td>string</td><td><code>"info"</code></td>
+      <td><code>debug</code>, <code>info</code>, <code>warning</code>, <code>error</code>, <code>critical</code> (case-insensitive)</td>
+    </tr>
+  </tbody>
+</table>
 
-  <h2>Derived Fields (read-only)</h2>
+<h2>Derived Fields (read-only)</h2>
 
-  <p>These are computed from other config values and cannot be set manually. They are calculated at startup by the Pydantic model:</p>
+<p>These are computed from other config values and cannot be set manually. They are calculated at startup by the Pydantic model:</p>
 
-  <table>
-    <thead><tr><th>Field</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr><td><code>THOLDS</code></td><td>Tuple of 4 values: (lat_min, lat_max, lon_min, lon_max) computed from <code>LAT</code>, <code>LON</code>, and <code>DISPLAY_RADIUS_NM</code> using geopy's geodesic distance.</td></tr>
-      <tr><td><code>LAT_MIN</code> / <code>LAT_MAX</code></td><td>Southern and northern latitude bounds of the display area.</td></tr>
-      <tr><td><code>LON_MIN</code> / <code>LON_MAX</code></td><td>Western and eastern longitude bounds of the display area.</td></tr>
-      <tr><td><code>LAT_RANGE</code></td><td>NumPy linspace array of 64 latitude values evenly spanning <code>LAT_MIN</code> to <code>LAT_MAX</code>. Used for pixel mapping.</td></tr>
-      <tr><td><code>LON_RANGE</code></td><td>NumPy linspace array of 64 longitude values evenly spanning <code>LON_MIN</code> to <code>LON_MAX</code>.</td></tr>
-    </tbody>
-  </table>
+<table>
+  <thead><tr><th>Field</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>THOLDS</code></td><td>Tuple of 4 values: (lat_min, lat_max, lon_min, lon_max) computed from <code>LAT</code>, <code>LON</code>, and <code>DISPLAY_RADIUS_NM</code> using geopy's geodesic distance.</td></tr>
+    <tr><td><code>LAT_MIN</code> / <code>LAT_MAX</code></td><td>Southern and northern latitude bounds of the display area.</td></tr>
+    <tr><td><code>LON_MIN</code> / <code>LON_MAX</code></td><td>Western and eastern longitude bounds of the display area.</td></tr>
+    <tr><td><code>LAT_RANGE</code></td><td>NumPy linspace array of 64 latitude values evenly spanning <code>LAT_MIN</code> to <code>LAT_MAX</code>. Used for pixel mapping.</td></tr>
+    <tr><td><code>LON_RANGE</code></td><td>NumPy linspace array of 64 longitude values evenly spanning <code>LON_MIN</code> to <code>LON_MAX</code>.</td></tr>
+  </tbody>
+</table>
 
-  <h2>Web Configurator</h2>
+<h2>Web Configurator</h2>
 
-  <p>All fields except <code>GET_URL</code>, <code>LCD_SEND_URL</code>, and <code>MATRIX_HTTP_URL</code> are editable via the web UI at <code>http://deskradar.local:5000/config</code>.</p>
+<p>All fields except <code>GET_URL</code>, <code>LCD_SEND_URL</code>, and <code>MATRIX_HTTP_URL</code> are editable via the web UI at <code>http://deskradar.local:5000/config</code>.</p>
 
-  <p>The UI handles type coercion automatically — integer fields stay integers, floats stay floats. The <code>CLOSEST_COLOUR</code> field is presented as a color picker and converted between hex and RGB dict format transparently.</p>
-
-</div>
-</body>
-</html>
+<p>The UI handles type coercion automatically — integer fields stay integers, floats stay floats. The <code>CLOSEST_COLOUR</code> field is presented as a color picker and converted between hex and RGB dict format transparently.</p>

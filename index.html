@@ -1,45 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeskRadar — Overview</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<nav>
-  <div class="nav-burger">
-    <button class="nav-toggle" aria-label="Menu" onclick="this.nextElementSibling.classList.toggle('open')">
-      <span></span><span></span><span></span>
-    </button>
-    <ul>
-    <li><a href="index.html" class="active">Overview</a></li>
-    <li><a href="architecture.html">Architecture</a></li>
-    <li><a href="source.html">Source</a></li>
-    <li><a href="configuration.html">Configuration</a></li>
-    <li><a href="installation.html">Installation</a></li>
-    <li><a href="bill_of_materials.html">Bill of Materials</a></li>
-    <li><a href="stores.html">Stores</a></li>
-    <li><a href="faq.html">FAQ</a></li>
-    <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank">Feature &amp; Bug Board</a></li>
-    </ul>
-  </div>
-</nav>
-<div class="container">
+---
+layout: default
+title: Overview
+nav: overview
+---
 
-  <h1>DeskRadar</h1>
-  <p class="subtitle">Real-time aircraft tracking on a 64×64 LED matrix display.</p>
+<h1>DeskRadar</h1>
+<p class="subtitle">Real-time aircraft tracking on a 64×64 LED matrix display.</p>
 
-  <p>DeskRadar is a hardware and software system that polls live ADS-B data from a local <a href="https://github.com/flightaware/dump1090">dump1090</a> receiver and renders nearby aircraft tracks on a 64×64 RGB LED matrix. Altitude is mapped to color, historical trails fade over time, and the closest aircraft is highlighted and shown on a 16×2 LCD display. The entire system runs on a Raspberry Pi alongside an Adafruit MatrixPortal S3 that drives the LED matrix.</p>
+<p>DeskRadar is a hardware and software system that polls live ADS-B data from a local <a href="https://github.com/flightaware/dump1090">dump1090</a> receiver and renders nearby aircraft tracks on a 64×64 RGB LED matrix. Altitude is mapped to color, historical trails fade over time, and the closest aircraft is highlighted and shown on a 16×2 LCD display. The entire system runs on a Raspberry Pi alongside an Adafruit MatrixPortal S3 that drives the LED matrix.</p>
 
-  <h2>AI Transparency</h2>
+<h2>AI Transparency</h2>
 
-  <p>The <strong>deskradar</strong> and <strong>deskradar-pi-services</strong> Python codebases were written by me, except some math stuff I couldn't figure out. AI was used for bug finding and code review mostly.</p>
+<p>The <strong>deskradar</strong> and <strong>deskradar-pi-services</strong> Python codebases were written by me, except some math stuff I couldn't figure out. AI was used for bug finding and code review mostly.</p>
 
-  <p>The <strong>deskradar-matrixportals3</strong> CircuitPython firmware was more heavily AI-assisted due to my limited experience with CircuitPython, but I still kept an eye on it because it's stupid.</p>
+<p>The <strong>deskradar-matrixportals3</strong> CircuitPython firmware was more heavily AI-assisted due to my limited experience with CircuitPython, but I still kept an eye on it because it's stupid.</p>
 
-  <p>This documentation site and any READMEs were mostly written by AI for speed and convenience - (who enjoys writing this stuff?) and reviewed by me. I have done my best to remove all the em-dashes and "This is not X, it's Y."</p>
-
-</div>
-</body>
-</html>
+<p>This documentation site and any READMEs were mostly written by AI for speed and convenience - (who enjoys writing this stuff?) and reviewed by me. I have done my best to remove all the em-dashes and "This is not X, it's Y."</p>
