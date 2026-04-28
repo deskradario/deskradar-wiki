@@ -1,0 +1,23 @@
+---
+layout: default
+title: Updates
+nav: updates
+permalink: /updates.html
+---
+
+<h1>Updates</h1>
+<p class="subtitle">Product updates, release notes, and build notes.</p>
+
+{% if site.posts.size > 0 %}
+  <div class="post-list">
+    {% for post in site.posts %}
+      <article class="post-preview">
+        <p class="post-meta">{{ post.date | date: "%-d %B %Y" }}</p>
+        <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+        {{ post.excerpt }}
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No updates yet.</p>
+{% endif %}
