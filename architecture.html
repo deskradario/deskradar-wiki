@@ -40,7 +40,7 @@ permalink: /architecture.html
      ├─ Waits 10 seconds for network to stabilise
      ├─ Resolves deskradar-portal.local (retries every 2s, 30s timeout)
      ├─ Sends status updates to LCD service throughout
-     └─ Writes resolved IP to /etc/deskradar/config.json as MATRIX_HTTP_URL
+     └─ Writes http://&lt;resolved-ip&gt;:80 to /etc/deskradar/config.json as MATRIX_HTTP_URL
 
   3. deskradar.service starts (after bootstrap + network-online)
      └─ Main aircraft tracking app, reads config, polls dump1090
@@ -100,13 +100,13 @@ permalink: /architecture.html
   │  1. clear_hidden()             remove deferred smoothing flags
   │  2. clear_closest_marker()     reset previous closest colour
   │  3. enforce_max_history()      trim to MAX_HISTORY points
-  │  4. enforce_max_time()         remove if unseen > MAX_UNSEEN_SECS
+  │  4. enforce_max_time()         pop oldest point if latest update is older than MAX_UNSEEN_SECS
   │  5. plot()                     lat/lon → pixel coordinates
   │  6. remove_latest_dupe()       drop points at same pixel (within 500ft alt)
   │  7. fill_gaps()                interpolate across gaps > 1 pixel
   │  8. smooth_steps_deferred_head() remove 90° corners from track
-  │  9. add_colour()               altitude → RGB (white→yellow→green→blue→purple→red)
-  │ 10. fade()                     dim trail colours by FADE_FACTOR each cycle
+  │  9. add_colour()               altitude → RGB; stale visible head turns red after MAX_UNSEEN_SECS
+  │ 10. fade()                     dim trail colours when a new point arrives or a stale point is popped
         │
         ▼
   extract_draw()
@@ -117,7 +117,7 @@ permalink: /architecture.html
         │    or send_no_change() if pixel data unchanged
         │
         └──► manage_closest()  HTTP POST /display to LCD service
-             (sends closest aircraft callsign + spinner)</pre>
+             (sends closest aircraft callsign + altitude + spinner)</pre>
 
 <h2>Altitude Color Mapping</h2>
 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeskRadar — Contact</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-burger">
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="const menu=this.nextElementSibling; const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
+      <span></span><span></span><span></span>
+    </button>
+    <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="architecture.html">Architecture</a></li>
+    <li><a href="source.html">Source</a></li>
+    <li><a href="configuration.html">Configuration</a></li>
+    <li><a href="installation.html">Installation</a></li>
+    <li><a href="bill_of_materials.html">Bill of Materials</a></li>
+    <li><a href="stores.html">Stores</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+
+  <h1>Contact</h1>
+  <p class="subtitle">Feature requests, bug reports, and code issues.</p>
+
+  <h2>Email</h2>
+  <p>For feature requests or bug reports, email <a href="mailto:deskradar@deskradar.io">deskradar@deskradar.io</a>.</p>
+  <p>Reports sent by email will be reviewed before being added to the public <a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">feature and bug board</a>.</p>
+
+  <h2>GitHub Issues</h2>
+  <p>If the feature or bug is code-related, feel free to raise an issue directly on GitHub:</p>
+  <ul>
+    <li><a href="https://github.com/deskradario/deskradar/issues">deskradar issues</a> — main Raspberry Pi application.</li>
+    <li><a href="https://github.com/deskradario/deskradar-pi-services/issues">deskradar-pi-services issues</a> — Pi services, LCD, configurator, and boot checks.</li>
+    <li><a href="https://github.com/deskradario/deskradar-matrixportals3/issues">deskradar-matrixportals3 issues</a> — MatrixPortal S3 firmware.</li>
+  </ul>
+
+</div>
+</body>
+</html>
