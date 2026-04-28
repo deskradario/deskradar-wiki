@@ -1,68 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeskRadar — Installation</title>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<nav>
-  <div class="nav-burger">
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="const menu=this.nextElementSibling; const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
-      <span></span><span></span><span></span>
-    </button>
-    <ul>
-    <li><a href="index.html">Overview</a></li>
-    <li><a href="architecture.html">Architecture</a></li>
-    <li><a href="source.html">Source</a></li>
-    <li><a href="configuration.html">Configuration</a></li>
-    <li><a href="installation.html" class="active">Installation</a></li>
-    <li><a href="bill_of_materials.html">Bill of Materials</a></li>
-    <li><a href="stores.html">Stores</a></li>
-    <li><a href="contact.html">Contact</a></li>
-    <li><a href="faq.html">FAQ</a></li>
-    <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
-    </ul>
-  </div>
-</nav>
-<div class="container">
+---
+layout: default
+title: Installation
+nav: installation
+permalink: /installation.html
+---
 
-  <h1>Installation</h1>
-  <p class="subtitle">Get DeskRadar running using the pre-built Raspberry Pi image.</p>
+<h1>Installation</h1>
+<p class="subtitle">Get DeskRadar running using the pre-built Raspberry Pi image.</p>
 
-  <h2>Pi Image</h2>
+<h2>Pi Image</h2>
 
-<<<<<<< Updated upstream
-  <p>The easiest way to get DeskRadar running is to flash the pre-built Pi image. It includes all software pre-installed and configured — no manual dependency installation required.</p>
-
-  <p><strong>Download DeskRadar Pi Image</strong> <em>(link coming soon)</em></p>
-
-  <div class="note">The image was built fresh from Raspberry Pi OS Bookworm (64-bit) but still contains a significant amount of default bloat. Removing unnecessary packages is recommended before deploying in production.</div>
-
-  <h2>Flashing the Image</h2>
-
-  <ol>
-    <li>Download the image once the image link is available.</li>
-    <li>Flash it to a microSD card using <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager</a> or <code>dd</code>.</li>
-    <li>Insert the card into your Raspberry Pi 4 and power it on.</li>
-  </ol>
-
-  <h2>After First Boot</h2>
-
-  <p>On first boot the Pi will broadcast a WiFi access point named <strong>deskradar</strong> (password: <code>deskradaradsb</code>). Connect to it from your phone or laptop and open <code>http://10.42.0.50:5000</code> to configure your home WiFi network and set your location coordinates.</p>
-
-  <p>See <a href="architecture.html">Architecture</a> for a full description of the boot sequence and network modes.</p>
-
-  <h2>MatrixPortal S3 Firmware</h2>
-
-  <p>The Adafruit MatrixPortal S3 firmware is installed separately before first use by copying the contents of <code>deskradar-matrixportals3/src/</code> to the CIRCUITPY volume. The repo's <code>install.sh</code> currently assumes the macOS mount path <code>/Volumes/CIRCUITPY/</code>; on Linux, copy to the mounted CIRCUITPY path instead. See the <a href="source.html">Source</a> page for the repository link and API details.</p>
-
-</div>
-</body>
-</html>
-=======
 <p>The easiest way to get DeskRadar running is to flash the pre-built Pi image. It is intended to include the main app, Pi services, systemd units, NetworkManager AP profile, Avahi hostname setup, and the default config file at <code>/etc/deskradar/config.json</code>.</p>
 
 <p><strong>Download:</strong> Pi image link coming soon.</p>
@@ -71,4 +18,3 @@
 
 <br>
 <p>Manual build instructions coming soon.</p>
->>>>>>> Stashed changes

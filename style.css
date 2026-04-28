@@ -171,18 +171,6 @@ li { margin-bottom: 0.3rem; }
   margin-bottom: 2rem;
 }
 
-<<<<<<< Updated upstream
-.hero-photo {
-  margin: 1.5rem 0 2rem;
-}
-
-.hero-photo img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-=======
 .home-hero {
   aspect-ratio: 16 / 10;
   background: #111;
@@ -198,7 +186,6 @@ li { margin-bottom: 0.3rem; }
   height: 100%;
   object-fit: cover;
   object-position: center 68%;
->>>>>>> Stashed changes
 }
 
 .component-grid {
@@ -235,6 +222,36 @@ li { margin-bottom: 0.3rem; }
   font-size: 0.9rem;
 }
 
+.post-list {
+  margin-top: 1.5rem;
+}
+
+.post-preview {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1.25rem 0;
+}
+
+.post-preview:first-child {
+  padding-top: 0;
+}
+
+.post-preview h2 {
+  border-bottom: none;
+  margin: 0 0 0.5rem;
+  padding-bottom: 0;
+}
+
+.post-preview p:last-child,
+.post p:last-child {
+  margin-bottom: 0;
+}
+
+.post-meta {
+  color: #666;
+  font-size: 0.875rem;
+  margin-bottom: 0.35rem;
+}
+
 .warning {
   background: #fff8e1;
   border-left: 3px solid #f0a500;
@@ -246,12 +263,6 @@ li { margin-bottom: 0.3rem; }
 @media (max-width: 600px) {
   h1 { font-size: 1.5rem; }
   .container { padding: 1.25rem 1rem 3rem; }
-<<<<<<< Updated upstream
-  table {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-=======
   .home-hero {
     aspect-ratio: 4 / 5;
   }
@@ -259,6 +270,5 @@ li { margin-bottom: 0.3rem; }
     display: block;
     overflow-x: auto;
     white-space: nowrap;
->>>>>>> Stashed changes
   }
 }

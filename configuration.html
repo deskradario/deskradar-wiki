@@ -1,47 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeskRadar — Configuration</title>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<nav>
-  <div class="nav-burger">
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="const menu=this.nextElementSibling; const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
-      <span></span><span></span><span></span>
-    </button>
-    <ul>
-    <li><a href="index.html">Overview</a></li>
-    <li><a href="architecture.html">Architecture</a></li>
-    <li><a href="source.html">Source</a></li>
-    <li><a href="configuration.html" class="active">Configuration</a></li>
-    <li><a href="installation.html">Installation</a></li>
-    <li><a href="bill_of_materials.html">Bill of Materials</a></li>
-    <li><a href="stores.html">Stores</a></li>
-    <li><a href="contact.html">Contact</a></li>
-    <li><a href="faq.html">FAQ</a></li>
-    <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
-    </ul>
-  </div>
-</nav>
-<div class="container">
+---
+layout: default
+title: Configuration
+nav: configuration
+permalink: /configuration.html
+---
 
-  <h1>Configuration Reference</h1>
-  <p class="subtitle">All fields in <code>/etc/deskradar/config.json</code>.</p>
+<h1>Configuration Reference</h1>
+<p class="subtitle">All fields in <code>/etc/deskradar/config.json</code>.</p>
 
-<<<<<<< Updated upstream
-  <p>The configuration file is read at startup by the main deskradar app and validated by a Pydantic model. If the file is missing or contains invalid values for active fields, the app will exit with an error. Extra compatibility fields may be present in the JSON and are ignored by the main app. Changes take effect after restarting the service (<code>sudo systemctl restart deskradar</code>). The web configurator at <code>http://deskradar.local:5000/config</code> handles saving and restarting automatically.</p>
-
-  <h2>Example File</h2>
-=======
 <h2>Example of Config File</h2>
->>>>>>> Stashed changes
 
 <pre>{
-  "HARD_RESTART": false,
   "LAT": 50,
   "LON": 0,
   "GET_URL": "http://127.0.0.1:8080/data/aircraft.json",
@@ -63,45 +32,24 @@
   "LOG_LEVEL": "info"
 }</pre>
 
-  <h2>Location</h2>
+<h2>Location</h2>
 
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>LAT</code></td><td>float</td><td>50</td>
-        <td>Latitude of the display center in decimal degrees. Aircraft are plotted relative to this point.</td>
-      </tr>
-      <tr>
-        <td><code>LON</code></td><td>float</td><td>0</td>
-        <td>Longitude of the display center in decimal degrees.</td>
-      </tr>
-    </tbody>
-  </table>
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>LAT</code></td><td>float</td><td>50</td>
+      <td>Latitude of the display center in decimal degrees. Aircraft are plotted relative to this point.</td>
+    </tr>
+    <tr>
+      <td><code>LON</code></td><td>float</td><td>0</td>
+      <td>Longitude of the display center in decimal degrees.</td>
+    </tr>
+  </tbody>
+</table>
 
-  <h2>Network URLs</h2>
+<h2>Network URLs</h2>
 
-<<<<<<< Updated upstream
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>GET_URL</code></td><td>string</td><td><code>http://127.0.0.1:8080/data/aircraft.json</code></td>
-        <td>dump1090 API endpoint to poll for aircraft data. Usually local to the Pi.</td>
-      </tr>
-      <tr>
-        <td><code>MATRIX_HTTP_URL</code></td><td>string</td><td><em>set by boot_check</em></td>
-        <td>Base URL of the MatrixPortal S3. Written automatically at boot by resolving <code>deskradar-portal.local</code>. The boot service writes <code>http://&lt;ip&gt;:80</code>; <code>http://&lt;ip&gt;</code> also works when port 80 is implied.</td>
-      </tr>
-      <tr>
-        <td><code>LCD_SEND_URL</code></td><td>string</td><td><code>http://0.0.0.0:8010/display</code></td>
-        <td>URL of the LCD service endpoint. Points to the local deskradar-lcd FastAPI service; deployments commonly use <code>127.0.0.1</code> here.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="note"><code>GET_URL</code>, <code>LCD_SEND_URL</code>, <code>MATRIX_HTTP_URL</code>, and <code>HARD_RESTART</code> are hidden from the web configurator UI — they are managed by the system, preserved for compatibility, or rarely need manual changes.</div>
-=======
 <table>
   <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
@@ -121,37 +69,9 @@
 </table>
 
 <div class="note"><code>GET_URL</code>, <code>LCD_SEND_URL</code>, and <code>MATRIX_HTTP_URL</code> are hidden from the web configurator UI because they are managed by the system.</div>
->>>>>>> Stashed changes
 
-  <h2>Display</h2>
+<h2>Display</h2>
 
-<<<<<<< Updated upstream
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>MATRIX_SIZE_PX</code></td><td>int</td><td>64</td>
-        <td>Pixel dimensions used by the Pi-side plotting code. The matrix is assumed to be square, and the MatrixPortal firmware is currently hardcoded for 64×64.</td>
-      </tr>
-      <tr>
-        <td><code>DISPLAY_RADIUS_NM</code></td><td>int</td><td>25</td>
-        <td>Nautical-mile distance used to compute north/south/east/west bounds around <code>LAT</code>/<code>LON</code>. Filtering is by that rectangular lat/lon box, not by a precise circular radius.</td>
-      </tr>
-      <tr>
-        <td><code>DRAW_RETICULE</code></td><td>bool</td><td>true</td>
-        <td>Compatibility field loaded from config. The current MatrixPortal firmware always draws a 2×2 grey center marker independently of this setting.</td>
-      </tr>
-      <tr>
-        <td><code>SHOW_CLOSEST</code></td><td>bool</td><td>true</td>
-        <td>Highlight the nearest aircraft on the matrix in <code>CLOSEST_COLOUR</code> when more than one active track exists. The LCD closest-aircraft display is currently sent regardless of this setting.</td>
-      </tr>
-      <tr>
-        <td><code>CLOSEST_COLOUR</code></td><td>object</td><td><code>{"r":255,"g":255,"b":255}</code></td>
-        <td>RGB color used to highlight the closest aircraft. Must include <code>r</code>, <code>g</code>, and <code>b</code> keys; the web UI color picker writes values in the 0-255 range.</td>
-      </tr>
-    </tbody>
-  </table>
-=======
 <table>
   <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
@@ -173,61 +93,9 @@
     </tr>
   </tbody>
 </table>
->>>>>>> Stashed changes
 
-  <h2>Tracking</h2>
+<h2>Tracking</h2>
 
-<<<<<<< Updated upstream
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>MAX_HISTORY</code></td><td>int</td><td>20</td>
-        <td>Maximum number of historical position points retained per aircraft track. Older points are dropped from the tail of the list.</td>
-      </tr>
-      <tr>
-        <td><code>POLL_CADENCE</code></td><td>float</td><td>1</td>
-        <td>Seconds between polling cycles. Lower values increase responsiveness but also CPU and network load.</td>
-      </tr>
-      <tr>
-        <td><code>FADE_FACTOR</code></td><td>float</td><td>0.95</td>
-        <td>Multiplier applied to trail point colors when a new point is accepted or a stale point is popped (0.0-1.0). Lower values fade trails faster.</td>
-      </tr>
-      <tr>
-        <td><code>MIN_ALT</code></td><td>int</td><td>1000</td>
-        <td>Minimum altitude in feet for an aircraft to appear on screen. Filters out ground traffic and very-low-altitude aircraft.</td>
-      </tr>
-      <tr>
-        <td><code>UNSEEN_MARK_SECS</code></td><td>int</td><td>10</td>
-        <td>Compatibility field currently loaded but not used by the main app. Stale coloring is currently governed by <code>MAX_UNSEEN_SECS</code>.</td>
-      </tr>
-      <tr>
-        <td><code>MAX_UNSEEN_SECS</code></td><td>int</td><td>20</td>
-        <td>Seconds without a new update before the track starts disappearing: one old point is removed per cycle and the visible head is colored red until the track is gone.</td>
-      </tr>
-      <tr>
-        <td><code>LONLAT_DECIMALS</code></td><td>int</td><td>3</td>
-        <td>Compatibility field currently loaded but not applied by the main app.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h2>Timeouts</h2>
-
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>MATRIX_HTTP_TIMEOUT</code></td><td>int</td><td>2</td>
-        <td>Seconds before HTTP requests to the MatrixPortal time out. A failed request can delay the loop by up to this timeout.</td>
-      </tr>
-      <tr>
-        <td><code>LCD_TIMEOUT</code></td><td>int</td><td>1</td>
-        <td>Seconds before HTTP requests to the LCD service time out.</td>
-      </tr>
-    </tbody>
-  </table>
-=======
 <table>
   <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
@@ -269,56 +137,16 @@
     </tr>
   </tbody>
 </table>
->>>>>>> Stashed changes
 
-  <h2>Logging</h2>
+<h2>Logging</h2>
 
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Allowed Values</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>LOG_LEVEL</code></td><td>string</td><td><code>"info"</code></td>
-        <td><code>debug</code>, <code>info</code>, <code>warning</code>, <code>error</code>, <code>critical</code> (case-insensitive)</td>
-      </tr>
-    </tbody>
-  </table>
+<table>
+  <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Allowed Values</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>LOG_LEVEL</code></td><td>string</td><td><code>"info"</code></td>
+      <td><code>debug</code>, <code>info</code>, <code>warning</code>, <code>error</code>, <code>critical</code> (case-insensitive)</td>
+    </tr>
+  </tbody>
+</table>
 
-<<<<<<< Updated upstream
-  <h2>Compatibility Fields</h2>
-
-  <table>
-    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><code>HARD_RESTART</code></td><td>bool</td><td>false</td>
-        <td>Present in the example config for compatibility. The current main app ignores this field.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h2>Derived Fields (read-only)</h2>
-
-  <p>These are computed from other config values and cannot be set manually. They are calculated at startup by the Pydantic model:</p>
-
-  <table>
-    <thead><tr><th>Field</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr><td><code>THOLDS</code></td><td>Dictionary of <code>north_lat</code>, <code>south_lat</code>, <code>east_lon</code>, and <code>west_lon</code> computed from <code>LAT</code>, <code>LON</code>, and <code>DISPLAY_RADIUS_NM</code> using geopy's geodesic distance.</td></tr>
-      <tr><td><code>LAT_MIN</code> / <code>LAT_MAX</code></td><td>Southern and northern latitude bounds of the display area.</td></tr>
-      <tr><td><code>LON_MIN</code> / <code>LON_MAX</code></td><td>Western and eastern longitude bounds of the display area.</td></tr>
-      <tr><td><code>LAT_RANGE</code></td><td>NumPy linspace array of 64 latitude values evenly spanning <code>LAT_MIN</code> to <code>LAT_MAX</code>. Used for pixel mapping.</td></tr>
-      <tr><td><code>LON_RANGE</code></td><td>NumPy linspace array of 64 longitude values evenly spanning <code>LON_MIN</code> to <code>LON_MAX</code>.</td></tr>
-    </tbody>
-  </table>
-
-  <h2>Web Configurator</h2>
-
-  <p>The web UI at <code>http://deskradar.local:5000/config</code> edits the fields rendered in its form. <code>GET_URL</code>, <code>LCD_SEND_URL</code>, <code>MATRIX_HTTP_URL</code>, <code>HARD_RESTART</code>, and derived fields are not shown; existing unshown keys are preserved when saving.</p>
-
-  <p>The UI handles type coercion automatically — integer fields stay integers, floats stay floats. The <code>CLOSEST_COLOUR</code> field is presented as a color picker and converted between hex and RGB dict format transparently.</p>
-
-</div>
-</body>
-</html>
-=======
->>>>>>> Stashed changes

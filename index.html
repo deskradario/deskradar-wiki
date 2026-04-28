@@ -1,40 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeskRadar — Overview</title>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<nav>
-  <div class="nav-burger">
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="const menu=this.nextElementSibling; const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
-      <span></span><span></span><span></span>
-    </button>
-    <ul>
-    <li><a href="index.html" class="active">Overview</a></li>
-    <li><a href="architecture.html">Architecture</a></li>
-    <li><a href="source.html">Source</a></li>
-    <li><a href="configuration.html">Configuration</a></li>
-    <li><a href="installation.html">Installation</a></li>
-    <li><a href="bill_of_materials.html">Bill of Materials</a></li>
-    <li><a href="stores.html">Stores</a></li>
-    <li><a href="contact.html">Contact</a></li>
-    <li><a href="faq.html">FAQ</a></li>
-    <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
-    </ul>
-  </div>
-</nav>
-<div class="container">
+---
+layout: default
+title: Overview
+nav: overview
+---
 
-<<<<<<< Updated upstream
-  <h1>DeskRadar</h1>
-  <p class="subtitle">Real-time aircraft tracking on a 64×64 LED matrix display.</p>
-
-  <p>DeskRadar is a hardware and software system that polls live ADS-B data from a local <a href="https://github.com/flightaware/dump1090">dump1090</a> receiver and renders nearby aircraft tracks on a 64×64 RGB LED matrix. Altitude is mapped to color, historical trails fade over time, and the closest aircraft can be highlighted while its callsign and altitude are shown on a 16×2 LCD display. The system runs on a Raspberry Pi alongside an Adafruit MatrixPortal S3 that drives the LED matrix.</p>
-=======
 <h1>DeskRadar</h1>
 <p class="subtitle">Real-time local ADS-B aircraft tracking on a 64x64 LED matrix display.</p>
 
@@ -45,60 +14,11 @@
 <p>DeskRadar is a hardware and software system that reads aircraft data from a local dump1090 ADS-B output and renders nearby aircraft tracks on a 64x64 RGB LED matrix. The Raspberry Pi runs the RTL-SDR receiver, display calculation software and support services. An Adafruit MatrixPortal S3 drives the HUB75 matrix over HTTP.</p>
 
 <p>The main display shows each aircraft as a colored track. Position is mapped from latitude and longitude to matrix pixels, altitude is mapped to color, trails fade as the track ages, and duplicated pixels are collapsed so the highest aircraft wins when multiple points land on the same pixel. A 16x2 I2C LCD shows status messages and the current closest aircraft callsign/altitude.</p>
->>>>>>> Stashed changes
 
-  <figure class="hero-photo">
-    <img src="media/deskradar-home.JPG" alt="DeskRadar showing live aircraft tracks on a 64 by 64 LED matrix with closest-aircraft details on the LCD.">
-  </figure>
+<h2>AI Transparency</h2>
 
-<<<<<<< Updated upstream
-  <h2>Components</h2>
-
-  <div class="component-grid">
-    <div class="component-card">
-      <h3><a href="source.html">deskradar</a></h3>
-      <p>Python application that polls ADS-B data, processes aircraft tracks through a multi-stage pipeline, and sends pixel draw commands to the matrix.</p>
-      <p><strong>Language:</strong> Python 3.13<br>
-      <strong>Runs on:</strong> Raspberry Pi (Linux)</p>
-    </div>
-    <div class="component-card">
-      <h3><a href="source.html">deskradar-pi-services</a></h3>
-      <p>Supporting services on the Pi: a FastAPI LCD display service, a Flask web configurator, and a boot-time mDNS resolver.</p>
-      <p><strong>Language:</strong> Python<br>
-      <strong>Managed by:</strong> systemd</p>
-    </div>
-    <div class="component-card">
-      <h3><a href="source.html">deskradar-matrixportals3</a></h3>
-      <p>CircuitPython firmware on an Adafruit MatrixPortal S3. Exposes an HTTP API and renders pixel commands to the physical 64×64 LED matrix.</p>
-      <p><strong>Language:</strong> CircuitPython<br>
-      <strong>Hardware:</strong> MatrixPortal S3 + HUB75 matrix</p>
-    </div>
-  </div>
-
-  <h2>Data Flow Summary</h2>
-  <ol>
-    <li>dump1090 receives ADS-B transmissions from aircraft and exposes them as JSON at <code>:8080/data/aircraft.json</code>.</li>
-    <li>The <strong>deskradar</strong> app polls that endpoint every second by default, filters aircraft by altitude and computed latitude/longitude bounds, then runs each track through a 10-stage processing pipeline (plot → deduplicate → fill gaps → smooth → color by altitude → fade trails).</li>
-    <li>The resulting pixel list is sent via HTTP POST to <code>/draw</code> on the <strong>MatrixPortal S3</strong>, which renders it onto the 64×64 LED matrix. Empty and unchanged frames use <code>/empty</code> and <code>/no-change</code>.</li>
-    <li>Simultaneously, the closest aircraft callsign, altitude, and spinner are sent to the <strong>LCD service</strong> on the Pi, which displays them on a 16×2 character display.</li>
-    <li>The <strong>web configurator</strong> allows changing the browser-exposed settings and restarts the main app when saved.</li>
-  </ol>
-
-  <h2>A note on AI</h2>
-
-  <p>The <strong>deskradar</strong> and <strong>deskradar-pi-services</strong> Python codebases were written by me. AI was used as a tool for bug finding, writing specific functions, and code review — the core design and implementation is my own work.</p>
-
-  <p>The <strong>deskradar-matrixportals3</strong> CircuitPython firmware was more heavily AI-assisted due to my limited experience with CircuitPython, but was reviewed and scrutinised by me throughout.</p>
-
-  <p>This documentation site and any READMEs were mostly written by AI for speed and convenience - (who enjoys writing this stuff?) and reviewed by me.</p>
-
-</div>
-</body>
-</html>
-=======
 <p>The <strong>deskradar</strong> and <strong>deskradar-pi-services</strong> Python codebases were written by me, with AI used mostly for bug finding, code review, and help on some maths-heavy bits.</p>
 
 <p>The <strong>deskradar-matrixportals3</strong> CircuitPython firmware was more heavily AI-assisted because CircuitPython was less familiar territory, but the code was still reviewed and tested against the project hardware.</p>
 
 <p>This documentation site was written quickly with AI assistance and then checked against the local project repositories so the public docs match the code as closely as possible.</p>
->>>>>>> Stashed changes
