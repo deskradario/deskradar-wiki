@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% assign meta_description = page.description | default: page.summary | default: site.description %}
+  {% if meta_description %}
+  <meta name="description" content="{{ meta_description | strip_html | strip_newlines | escape }}">
+  {% endif %}
   <title>{{ site.title }}{% if page.title %} - {{ page.title }}{% endif %}</title>
   <link rel="icon" type="image/png" href="{{ '/favicon.png' | relative_url }}">
   <link rel="shortcut icon" type="image/png" href="{{ '/favicon.png' | relative_url }}">
@@ -10,12 +14,13 @@
   <link rel="stylesheet" href="{{ '/style.css' | relative_url }}">
 </head>
 <body>
-<nav>
+<a class="skip-link" href="#main-content">Skip to content</a>
+<nav aria-label="Primary">
   <div class="nav-burger">
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="const menu=this.nextElementSibling; const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="primary-nav" onclick="const menu=document.getElementById(this.getAttribute('aria-controls')); const isOpen=menu.classList.toggle('open'); this.setAttribute('aria-expanded', isOpen)">
       <span></span><span></span><span></span>
     </button>
-    <ul>
+    <ul id="primary-nav">
       <li><a href="{{ '/index.html' | relative_url }}"{% if page.nav == 'overview' %} class="active"{% endif %}>Overview</a></li>
       <li><a href="{{ '/configuration.html' | relative_url }}"{% if page.nav == 'configuration' %} class="active"{% endif %}>Configuration</a></li>
       <li><a href="{{ '/faq.html' | relative_url }}"{% if page.nav == 'faq' %} class="active"{% endif %}>FAQ</a></li>
@@ -26,12 +31,13 @@
       <li><a href="{{ '/updates.html' | relative_url }}"{% if page.nav == 'updates' or page.collection == 'posts' %} class="active"{% endif %}>Updates</a></li>
       <li><a href="{{ '/guides.html' | relative_url }}"{% if page.nav == 'guides' or page.collection == 'guides' %} class="active"{% endif %}>Guides</a></li>
       <li><a href="{{ '/stores.html' | relative_url }}"{% if page.nav == 'stores' %} class="active"{% endif %}>Stores</a></li>
+      <li><a href="{{ '/contact.html' | relative_url }}"{% if page.nav == 'contact' %} class="active"{% endif %}>Contact</a></li>
       <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
     </ul>
   </div>
 </nav>
-<div class="container">
+<main id="main-content" class="container">
   {{ content }}
-</div>
+</main>
 </body>
 </html>
