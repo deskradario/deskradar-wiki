@@ -281,7 +281,8 @@ li { margin-bottom: 0.3rem; }
   padding-top: 0;
 }
 
-.post-preview h2 {
+.post-preview h2,
+.post-preview h3 {
   border-bottom: none;
   margin: 0 0 0.5rem;
   padding-bottom: 0;

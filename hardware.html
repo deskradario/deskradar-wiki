@@ -1,0 +1,32 @@
+---
+layout: default
+title: Hardware/Bill of Materials
+nav: hardware
+permalink: /hardware/
+---
+
+<h1>Hardware/Bill of Materials</h1>
+
+<p><a href="https://shop.deskradar.io" target="_blank" rel="noopener noreferrer">Visit the DeskRadar Etsy store</a>.</p>
+
+<h2>Power Delivery Methods</h2>
+
+<p>DeskRadar can be powered in two ways, depending on whether you want to use the custom power rail.</p>
+
+<h3>1. Pi USB-C plus direct matrix power</h3>
+<p>Power the Raspberry Pi through its USB-C power input. The Pi then powers the MatrixPortal over USB. The 2.1mm barrel jack is passed straight through to the LED matrix so the matrix has its own direct supply.</p>
+<p>This is really ugly because a cable is coming out of the side, and not the way I initially designed this. It is the most simple way of doing it through.</p>
+
+<h3>2. Custom power rail</h3>
+<p>Use the custom power rail to power everything from the 2.1mm barrel jack. In this setup the barrel jack feeds the rail, and the rail distributes power to the Pi, MatrixPortal, and LED matrix.</p>
+
+<h2>Bill of Materials</h2>
+
+<p>The live bill of materials is maintained in Google Sheets. <a href="https://docs.google.com/spreadsheets/d/1Lz8ZiZV83O61dhBWZ0qu6fqzqWgGCzJ0g4K8_wqb5GY/" target="_blank" rel="noopener noreferrer">Open the sheet in Google Sheets</a>.</p>
+
+<div class="sheet-embed">
+  <iframe
+    src="https://docs.google.com/spreadsheets/d/1Lz8ZiZV83O61dhBWZ0qu6fqzqWgGCzJ0g4K8_wqb5GY/preview"
+    title="DeskRadar bill of materials">
+  </iframe>
+</div>

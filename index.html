@@ -4,7 +4,7 @@ title: Overview
 nav: overview
 ---
 
-<h1>DeskRadar</h1>
+<h1>DeskRadar64</h1>
 <p class="subtitle">Real-time local ADS-B aircraft tracking on a 64x64 LED matrix display.</p>
 
 <figure class="home-hero">
@@ -15,10 +15,29 @@ nav: overview
 
 <p>The main display shows each aircraft as a colored track. Position is mapped from latitude and longitude to matrix pixels, altitude is mapped to color, trails fade as the track ages, and duplicated pixels are collapsed so the highest aircraft wins when multiple points land on the same pixel. A 16x2 I2C LCD shows status messages and the current closest aircraft callsign/altitude.</p>
 
+{% assign latest_update = site.posts.first %}
+{% if latest_update %}
+<h2>Latest Update</h2>
+<article class="post-preview latest-update">
+  <p class="post-meta">{{ latest_update.date | date: "%-d %B %Y" }}</p>
+  <h3><a href="{{ latest_update.url | relative_url }}">{{ latest_update.title }}</a></h3>
+  {{ latest_update.excerpt }}
+  <p><a href="{{ '/updates.html' | relative_url }}">View all updates</a></p>
+</article>
+{% endif %}
+
+<h2>Featured Guide</h2>
+<article class="post-preview featured-guide">
+  <h3><a href="{{ '/guides/initial-setup/' | relative_url }}">Initial Setup</a></h3>
+  <p>Join the DeskRadar setup AP, open the web configurator, update your settings, and save them.</p>
+</article>
+
+
+
 <h2>AI Transparency</h2>
 
-<p>The <strong>deskradar</strong> and <strong>deskradar-pi-services</strong> Python codebases were written by me, with AI used mostly for bug finding, code review, and help on some maths-heavy bits.</p>
+<p>The <strong>deskradar</strong> and <strong>deskradar-pi-services</strong> Python codebases were written by me, with AI used mostly for bug finding, code review, and help on some maths-heavy bits cos I'm rubbish at that.</p>
 
-<p>The <strong>deskradar-matrixportals3</strong> CircuitPython firmware was more heavily AI-assisted because CircuitPython was less familiar territory, but the code was still reviewed and tested against the project hardware.</p>
+<p>The <strong>deskradar-matrixportals3</strong> CircuitPython firmware was more heavily AI-assisted because CircuitPython was less familiar, but I still reviewed everything to the best of my ability.</p>
 
-<p>This documentation site was written quickly with AI assistance and then checked against the local project repositories so the public docs match the code as closely as possible.</p>
+<p>This documentation site was written mostly by AI with my review & edits. AI did a pretty terrible job but, better than me writing frontend!</p>
