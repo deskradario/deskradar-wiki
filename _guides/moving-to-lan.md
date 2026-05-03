@@ -3,6 +3,7 @@ layout: post
 title: Moving to LAN
 summary: Use nmcli to move the Pi to your WiFi, then update MatrixPortal wifi.txt.
 order: 2
+pinned: true
 ---
 
 The Pi and MatrixPortal must be on the same network. The Pi can create its own setup AP, but normal running is easier when both devices join your LAN. The web configurator can do this for you when the MatrixPortal CIRCUITPY drive is mounted on the Pi. This page documents the manual flow.

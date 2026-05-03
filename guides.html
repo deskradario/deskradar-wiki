@@ -12,7 +12,7 @@ permalink: /guides.html
 {% assign pinned_guides = guides | where: "pinned", true %}
 {% if guides.size > 0 %}
   {% if pinned_guides.size > 0 %}
-    <h2>Pinned Guide</h2>
+    <h2>Pinned Guides</h2>
     <div class="post-list">
       {% for guide in pinned_guides %}
         <article class="post-preview">

@@ -1,28 +1,34 @@
 ---
 layout: default
-title: Hardware/Bill of Materials
+title: Hardware & Bill of Materials
 nav: hardware
 permalink: /hardware/
 ---
 
-<h1>Hardware/Bill of Materials</h1>
+<h1>Hardware &amp; Bill of Materials</h1>
 
 <p><a href="https://shop.deskradar.io" target="_blank" rel="noopener noreferrer">Visit the DeskRadar Etsy store</a>.</p>
 
-<h2>Power Delivery Methods</h2>
+<h2>Power Options</h2>
 
-<p>DeskRadar can be powered in two ways, depending on whether you want to use the custom power rail.</p>
+<p>DeskRadar has two power options.</p>
 
-<h3>1. Pi USB-C plus direct matrix power</h3>
-<p>Power the Raspberry Pi through its USB-C power input. The Pi then powers the MatrixPortal over USB. The 2.1mm barrel jack is passed straight through to the LED matrix so the matrix has its own direct supply.</p>
-<p>This is really ugly because a cable is coming out of the side, and not the way I initially designed this. It is the most simple way of doing it through.</p>
+<h3>Option 1: Pi USB-C plus direct matrix power</h3>
+<ul>
+  <li>Plug the Raspberry Pi USB-C power cable into the Pi through the dev opening on the side of the enclosure, where you can see the Pi I/O</li>
+  <li>Plug a 2.1 mm barrel-jack power supply into the rear jack. A 12 V 3 A supply is recommended with DC-DC buck (see BoM below)</li>
+  <li>Connect the rear jack to the LED matrix only, using the Wago connectors listed in the bill of materials below.</li>
+</ul>
+<p>In this setup, the Pi and MatrixPortal are powered over USB: the Pi powers the MatrixPortal.</p>
+<p>This option is ugly, but simple and reliable.</p>
 
-<h3>2. Custom power rail</h3>
-<p>Use the custom power rail to power everything from the 2.1mm barrel jack. In this setup the barrel jack feeds the rail, and the rail distributes power to the Pi, MatrixPortal, and LED matrix.</p>
+<h3>Option 2: Custom power rail</h3>
+<p>The custom power rail powers all internal components. This should make the build cleaner because no power cable needs to exit through the side of the enclosure.</p>
+<p>This option is coming soon for purchase. I have it prototyped but want to be happy with it before I release it on the store. You can find instructions on how to build it in the <a href="{{ '/guides/construction-instructions/' | relative_url }}">construction instructions guide</a>, but note this is constantly evolving.</p>
 
 <h2>Bill of Materials</h2>
 
-<p>The live bill of materials is maintained in Google Sheets. <a href="https://docs.google.com/spreadsheets/d/1Lz8ZiZV83O61dhBWZ0qu6fqzqWgGCzJ0g4K8_wqb5GY/" target="_blank" rel="noopener noreferrer">Open the sheet in Google Sheets</a>.</p>
+<a href="https://docs.google.com/spreadsheets/d/1Lz8ZiZV83O61dhBWZ0qu6fqzqWgGCzJ0g4K8_wqb5GY/" target="_blank" rel="noopener noreferrer">Open the sheet in Google Sheets</a>
 
 <div class="sheet-embed">
   <iframe
