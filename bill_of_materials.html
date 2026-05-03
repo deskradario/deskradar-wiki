@@ -8,51 +8,11 @@ permalink: /bill_of_materials.html
 <h1>Bill of Materials</h1>
 <p class="subtitle">Everything you need to build a DeskRadar.</p>
 
-<p>This list is based on the current DeskRadar hardware build. Some enclosure and power distribution parts are custom or still need exact part names confirmed.</p>
+<p>The live bill of materials is maintained in Google Sheets. <a href="https://docs.google.com/spreadsheets/d/1Lz8ZiZV83O61dhBWZ0qu6fqzqWgGCzJ0g4K8_wqb5GY/" target="_blank" rel="noopener noreferrer">Open the sheet in Google Sheets</a>.</p>
 
-<h2>Core Electronics</h2>
-
-<table>
-  <thead><tr><th>Qty</th><th>Part</th><th>Notes</th></tr></thead>
-  <tbody>
-    <tr><td>1</td><td>Raspberry Pi 4B</td><td>Other Pi models may work, but the current build uses a Pi 4B.</td></tr>
-    <tr><td>1</td><td>Waveshare 64x64 2.5 pitch LED matrix</td><td>Current firmware and config assume a 64x64 HUB75 matrix.</td></tr>
-    <tr><td>1</td><td>Waveshare I2C LCD display</td><td>Used by the Pi LCD service for status and closest aircraft text.</td></tr>
-    <tr><td>1</td><td>FlightAware Pro Stick</td><td>ADS-B receiver for the local dump1090 feed.</td></tr>
-    <tr><td>1</td><td>1090 MHz antenna</td><td>ADS-B antenna for the receiver.</td></tr>
-    <tr><td>1</td><td>HUB75 ribbon cable</td><td>Connects the MatrixPortal/display driver path to the LED matrix.</td></tr>
-  </tbody>
-</table>
-
-<h2>Power and Cabling</h2>
-
-<table>
-  <thead><tr><th>Qty</th><th>Part</th><th>Notes</th></tr></thead>
-  <tbody>
-    <tr><td>1</td><td>12V 3A or 36W power supply with 2.1mm jack</td><td>Main external power supply.</td></tr>
-    <tr><td>1</td><td>Minimum 12V to 5V 4A DC buck converter</td><td>Steps the supply down for 5V components.</td></tr>
-    <tr><td>1</td><td>Custom power rail</td><td>Custom distribution part for the build.</td></tr>
-    <tr><td>1</td><td>150mm USB-A to USB-C data and power cable</td><td>Short internal cable.</td></tr>
-    <tr><td>1</td><td>Pi Hut USB-A female-to-male panel mount cable</td><td>Panel mount USB extension.</td></tr>
-  </tbody>
-</table>
-
-<h2>Enclosure and Mounting</h2>
-
-<table>
-  <thead><tr><th>Qty</th><th>Part</th><th>Notes</th></tr></thead>
-  <tbody>
-    <tr><td>1</td><td>Housing bottom</td><td>Custom enclosure part.</td></tr>
-    <tr><td>1</td><td>Housing top</td><td>Custom enclosure part.</td></tr>
-    <tr><td>1</td><td>Housing rear</td><td>Custom enclosure part.</td></tr>
-    <tr><td>8</td><td>M3 8mm hex housing screws</td><td>For enclosure assembly.</td></tr>
-    <tr><td>2</td><td>M3 12mm hex matrix peg screws</td><td>For matrix mounting.</td></tr>
-    <tr><td>6</td><td>M3 5mm/5mm threaded brass inserts</td><td>For threaded enclosure mounting points.</td></tr>
-    <tr><td>8</td><td>M2.5 5mm/3.5mm threaded brass inserts</td><td>For threaded Pi mounting points.</td></tr>
-    <tr><td>8</td><td>M2.5 Phillips Pi mounting screws</td><td>For Raspberry Pi and MatrixPortalS3 Mounting</td></tr>
-    <tr><td>2</td><td>Washers</td><td>Exact size still TBD.</td></tr>
-    <tr><td>1</td><td>160x163x3mm diffusing acrylic</td><td>Front diffuser for the LED matrix.</td></tr>
-  </tbody>
-</table>
-
-<div class="note">The build also uses the Adafruit MatrixPortal S3 firmware repository, but the current handwritten BOM does not list the MatrixPortal S3 explicitly. Add it to your purchase list if it is not already included in your display/control hardware.</div>
+<div class="sheet-embed">
+  <iframe
+    src="https://docs.google.com/spreadsheets/d/1Lz8ZiZV83O61dhBWZ0qu6fqzqWgGCzJ0g4K8_wqb5GY/preview"
+    title="DeskRadar bill of materials">
+  </iframe>
+</div>
