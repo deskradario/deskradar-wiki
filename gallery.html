@@ -1,0 +1,136 @@
+---
+layout: default
+title: Gallery
+nav: gallery
+permalink: /gallery/
+gallery_directory: /media/gallery/
+---
+
+<h1>Gallery</h1>
+<p class="subtitle">DeskRadar build photos and finished units.</p>
+
+{% assign gallery_files = site.static_files | sort: "path" %}
+{% assign slide_index = 0 %}
+
+<div class="gallery-slideshow" data-gallery-slideshow tabindex="0">
+  <div class="gallery-stage">
+    {% for image in gallery_files %}
+      {% assign ext = image.extname | downcase %}
+      {% if image.path contains page.gallery_directory %}
+        {% if ext == ".jpg" or ext == ".jpeg" or ext == ".png" or ext == ".webp" or ext == ".gif" %}
+          {% assign image_title = image.name | split: "." | first | replace: "-", " " | replace: "_", " " | capitalize %}
+          <figure class="gallery-slide{% if slide_index == 0 %} active{% endif %}" data-gallery-slide{% unless slide_index == 0 %} hidden{% endunless %}>
+            <img src="{{ image.path | relative_url }}" alt="{{ image_title | escape }}" loading="{% if slide_index == 0 %}eager{% else %}lazy{% endif %}">
+            <figcaption>{{ image_title }}</figcaption>
+          </figure>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% if slide_index == 0 %}
+      <p class="gallery-empty">Add image files to <code>{{ page.gallery_directory }}</code> to show them here.</p>
+    {% endif %}
+  </div>
+
+  {% if slide_index > 1 %}
+    <div class="gallery-controls">
+      <button class="gallery-button" type="button" data-gallery-prev>Previous</button>
+      <p class="gallery-counter" aria-live="polite"><span data-gallery-current>1</span> / {{ slide_index }}</p>
+      <button class="gallery-button" type="button" data-gallery-next>Next</button>
+    </div>
+
+    <div class="gallery-dots" aria-label="Gallery images">
+      {% assign dot_index = 0 %}
+      {% for image in gallery_files %}
+        {% assign ext = image.extname | downcase %}
+        {% if image.path contains page.gallery_directory %}
+          {% if ext == ".jpg" or ext == ".jpeg" or ext == ".png" or ext == ".webp" or ext == ".gif" %}
+            <button class="gallery-dot" type="button" data-gallery-dot aria-label="Show image {{ dot_index | plus: 1 }}" aria-current="{% if dot_index == 0 %}true{% else %}false{% endif %}"></button>
+            {% assign dot_index = dot_index | plus: 1 %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  (() => {
+    const gallery = document.querySelector('[data-gallery-slideshow]');
+    if (!gallery) return;
+
+    const slides = Array.from(gallery.querySelectorAll('[data-gallery-slide]'));
+    const dots = Array.from(gallery.querySelectorAll('[data-gallery-dot]'));
+    const current = gallery.querySelector('[data-gallery-current]');
+    const previous = gallery.querySelector('[data-gallery-prev]');
+    const next = gallery.querySelector('[data-gallery-next]');
+    let activeIndex = 0;
+    let timer = null;
+
+    const showSlide = (index) => {
+      if (!slides.length) return;
+
+      activeIndex = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === activeIndex;
+        slide.hidden = !isActive;
+        slide.classList.toggle('active', isActive);
+      });
+
+      dots.forEach((dot, dotIndex) => {
+        dot.setAttribute('aria-current', dotIndex === activeIndex ? 'true' : 'false');
+      });
+
+      if (current) current.textContent = String(activeIndex + 1);
+    };
+
+    const restartTimer = () => {
+      if (timer) window.clearInterval(timer);
+      if (slides.length > 1) {
+        timer = window.setInterval(() => showSlide(activeIndex + 1), 6000);
+      }
+    };
+
+    previous?.addEventListener('click', () => {
+      showSlide(activeIndex - 1);
+      restartTimer();
+    });
+
+    next?.addEventListener('click', () => {
+      showSlide(activeIndex + 1);
+      restartTimer();
+    });
+
+    dots.forEach((dot, dotIndex) => {
+      dot.addEventListener('click', () => {
+        showSlide(dotIndex);
+        restartTimer();
+      });
+    });
+
+    gallery.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showSlide(activeIndex - 1);
+        restartTimer();
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        showSlide(activeIndex + 1);
+        restartTimer();
+      }
+    });
+
+    gallery.addEventListener('mouseenter', () => {
+      if (timer) window.clearInterval(timer);
+    });
+
+    gallery.addEventListener('mouseleave', restartTimer);
+
+    showSlide(0);
+    restartTimer();
+  })();
+</script>

@@ -265,6 +265,113 @@ li { margin-bottom: 0.3rem; }
   object-position: center 68%;
 }
 
+.gallery-slideshow {
+  margin: 1.5rem 0 2rem;
+}
+
+.gallery-stage {
+  aspect-ratio: 16 / 10;
+  background: #111;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.gallery-slide {
+  height: 100%;
+  margin: 0;
+  position: relative;
+  width: 100%;
+}
+
+.gallery-slide[hidden] {
+  display: none;
+}
+
+.gallery-slide img {
+  background: #111;
+  display: block;
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.gallery-slide figcaption {
+  background: rgba(0, 0, 0, 0.72);
+  bottom: 0;
+  color: #fff;
+  font-size: 0.875rem;
+  left: 0;
+  padding: 0.55rem 0.75rem;
+  position: absolute;
+  right: 0;
+}
+
+.gallery-empty {
+  align-items: center;
+  color: #ddd;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+}
+
+.gallery-controls {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+}
+
+.gallery-button {
+  background: #fff;
+  border: 1px solid #c8c8c8;
+  border-radius: 4px;
+  color: #222;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  min-height: 2.35rem;
+  padding: 0.45rem 0.8rem;
+}
+
+.gallery-button:hover {
+  background: #f2f2f2;
+}
+
+.gallery-counter {
+  color: #555;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.gallery-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: center;
+  margin-top: 0.85rem;
+}
+
+.gallery-dot {
+  background: #d7d7d7;
+  border: 1px solid #b8b8b8;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 0.75rem;
+  padding: 0;
+  width: 0.75rem;
+}
+
+.gallery-dot[aria-current="true"] {
+  background: #0057b8;
+  border-color: #0057b8;
+}
+
 .sheet-embed {
   width: 100%;
   height: min(75vh, 760px);
@@ -358,6 +465,9 @@ li { margin-bottom: 0.3rem; }
   h1 { font-size: 1.5rem; }
   .container { padding: 1.25rem 1rem 3rem; }
   .home-hero {
+    aspect-ratio: 4 / 5;
+  }
+  .gallery-stage {
     aspect-ratio: 4 / 5;
   }
   .sheet-embed {
