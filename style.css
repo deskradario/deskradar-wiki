@@ -338,6 +338,22 @@ li { margin-bottom: 0.3rem; }
   margin: 1.5rem 0 2rem;
 }
 
+.gallery-video {
+  aspect-ratio: 16 / 9;
+  background: #111;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+}
+
+.gallery-video iframe {
+  border: 0;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
 .gallery-stage {
   aspect-ratio: 16 / 10;
   background: #111;
