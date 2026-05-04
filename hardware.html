@@ -17,15 +17,19 @@ permalink: /hardware/
 <h3>Option 1: Pi USB-C plus direct matrix power</h3>
 <ul>
   <li>Plug the Raspberry Pi USB-C power cable into the Pi through the dev opening on the side of the enclosure, where you can see the Pi I/O</li>
-  <li>Plug a 2.1 mm barrel-jack power supply into the rear jack. A 12 V 3 A supply is recommended with DC-DC buck (see BoM below)</li>
-  <li>Connect the rear jack to the LED matrix only, using the Wago connectors listed in the bill of materials below.</li>
+  <li>Plug a 2.1 mm barrel-jack power supply into the rear jack. A 12 V 3 A supply is recommended with DC-DC buck. (see BoM below)</li>
+  <li>Connect the rear jack to the LED matrix only, using the Wago connectors. (see BoM below)</li>
 </ul>
 <p>In this setup, the Pi and MatrixPortal are powered over USB: the Pi powers the MatrixPortal.</p>
 <p>This option is ugly, but simple and reliable.</p>
 
 <h3>Option 2: Custom power rail</h3>
 <p>The custom power rail powers all internal components. This should make the build cleaner because no power cable needs to exit through the side of the enclosure.</p>
-<p>This option is coming soon for purchase. I have it prototyped but want to be happy with it before I release it on the store. You can find instructions on how to build it in the <a href="{{ '/guides/construction-instructions/' | relative_url }}">construction instructions guide</a>, but note this is constantly evolving.</p>
+<p>This option is coming soon for purchase. I have it prototyped but want to be happy with it before I release it on the store. You can find instructions on how to build it in the <a href="{{ '/guides/custom-power-rail/' | relative_url }}">Custom Power Rail guide</a>, but note this is constantly evolving.</p>
+<figure class="page-image">
+  <img src="{{ '/power_rail.jpg' | relative_url }}" alt="Custom DeskRadar power rail wiring harness" width="3941" height="3941" loading="lazy">
+  <figcaption>Custom power rail wiring harness.</figcaption>
+</figure>
 
 <h2>Bill of Materials</h2>
 

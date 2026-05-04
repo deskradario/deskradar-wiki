@@ -34,12 +34,13 @@ permalink: /configuration.html
 
 <h2>Location</h2>
 
-<table>
+<div class="table-scroll config-table-wrap">
+<table class="config-table">
   <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
     <tr>
       <td><code>LAT</code></td><td>float</td><td>50</td>
-      <td>Latitude of the display center in decimal degrees. Aircraft are plotted relative to this point.</td>
+      <td>Latitude of the display center in decimal degrees.</td>
     </tr>
     <tr>
       <td><code>LON</code></td><td>float</td><td>0</td>
@@ -47,10 +48,12 @@ permalink: /configuration.html
     </tr>
   </tbody>
 </table>
+</div>
 
 <h2>Network URLs</h2>
 
-<table>
+<div class="table-scroll config-table-wrap">
+<table class="config-table">
   <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
     <tr>
@@ -67,17 +70,19 @@ permalink: /configuration.html
     </tr>
   </tbody>
 </table>
+</div>
 
 <div class="note"><code>GET_URL</code>, <code>LCD_SEND_URL</code>, and <code>MATRIX_HTTP_URL</code> are hidden from the web configurator UI because they are managed by the system.</div>
 
 <h2>Display</h2>
 
-<table>
+<div class="table-scroll config-table-wrap">
+<table class="config-table">
   <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
     <tr>
       <td><code>MATRIX_SIZE_PX</code></td><td>int</td><td>64</td>
-      <td>Pixel dimensions used by the Pi for plotting. The current MatrixPortal firmware is hardcoded for a 64x64 display, so this should remain 64 unless the firmware is changed too.</td>
+      <td>Pixel dimensions used by the Pi for plotting. The current MatrixPortal firmware is hardcoded for a 64x64 display, so this should remain 64 unless the firmware is changed too for now!</td>
     </tr>
     <tr>
       <td><code>DISPLAY_RADIUS_NM</code></td><td>int</td><td>25</td>
@@ -93,10 +98,12 @@ permalink: /configuration.html
     </tr>
   </tbody>
 </table>
+</div>
 
 <h2>Tracking</h2>
 
-<table>
+<div class="table-scroll config-table-wrap">
+<table class="config-table">
   <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
     <tr>
@@ -121,10 +128,12 @@ permalink: /configuration.html
     </tr>
   </tbody>
 </table>
+</div>
 
 <h2>Timeouts</h2>
 <p>Mostly debug stuff this</p>
-<table>
+<div class="table-scroll config-table-wrap">
+<table class="config-table">
   <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
   <tbody>
     <tr>
@@ -137,10 +146,12 @@ permalink: /configuration.html
     </tr>
   </tbody>
 </table>
+</div>
 
 <h2>Logging</h2>
 
-<table>
+<div class="table-scroll config-table-wrap">
+<table class="config-table">
   <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Allowed Values</th></tr></thead>
   <tbody>
     <tr>
@@ -149,4 +160,4 @@ permalink: /configuration.html
     </tr>
   </tbody>
 </table>
-
+</div>

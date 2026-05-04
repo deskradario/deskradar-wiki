@@ -43,6 +43,8 @@ Update the settings for your build and location. The most important values are:
 | `LON` | Your display centre longitude in decimal degrees. |
 | `DISPLAY_RADIUS_NM` | The radius, in nautical miles, to show around your location. |
 | `MIN_ALT` | Minimum altitude in feet before aircraft are drawn. |
+| `MAX_HISTORY` | Number of previous positions retained for each aircraft trail. Higher values draw longer trails. |
+| `FADE_FACTOR` | How quickly trails fade each update. Lower values fade faster; values closer to 1 keep trails visible longer. |
 
 Leave system-managed URLs alone unless you are debugging. The configurator hides the main managed URLs in normal use.
 

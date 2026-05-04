@@ -28,21 +28,15 @@ permalink: /architecture.html
 <h3>AP Mode (initial setup / fallback)</h3>
 <p>The Pi creates a WiFi access point named <strong>deskradar</strong> (password: <code>deskradaradsb</code>) with IP <code>10.42.0.50</code>. The MatrixPortal S3 joins this AP automatically (its <code>wifi.txt</code> is pre-configured with these credentials). The web configurator is reachable at <code>http://10.42.0.50:5000</code>.</p>
 
-<pre>
-  Laptop/Phone ---- WiFi SSID deskradar ----> Pi AP, 10.42.0.50
-                                                    |
-                                            MatrixPortal S3
-                                            also on this AP</pre>
 
 <h3>LAN Mode</h3>
-<p>Once a home WiFi network is configured, both the Pi and the MatrixPortal should join the same WiFi. The Pi is advertised as <code>deskradar.local</code> by Avahi when <code>setup_mdns.sh</code> has been run. The MatrixPortal advertises <code>deskradar-portal.local</code> from CircuitPython mDNS. The Pi boot check resolves that hostname and writes the MatrixPortal URL to <code>/etc/deskradar/config.json</code>.</p>
+<p>Once a home WiFi network is configured, both the Pi and the MatrixPortal should join the same WiFi. The Pi is advertised as <code>deskradar.local</code>. has been run. The MatrixPortal advertises <code>deskradar-portal.local</code> from CircuitPython mDNS. The Pi boot check resolves that hostname and writes the MatrixPortal URL to <code>/etc/deskradar/config.json</code>.</p>
 
-<pre>
-  Home router ---- Pi, deskradar.local
-             |
-             +---- MatrixPortal S3, deskradar-portal.local</pre>
 
-<div class="note">The web configurator can switch the Pi to WiFi and write the MatrixPortal <code>wifi.txt</code> only when the MatrixPortal CIRCUITPY volume is mounted under <code>/media/deskradar/CIRCUITPY*</code>. See <a href="{{ '/guides/moving-to-lan/' | relative_url }}">Moving to LAN</a> for manual steps.</div>
+<p><strong>WIP!</strong></p>
+<p>The web configurator can switch the Pi to WiFi and write the MatrixPortal <code>wifi.txt</code> only when the MatrixPortal CIRCUITPY volume is mounted under <code>/media/deskradar/CIRCUITPY*</code>. See <a href="{{ '/guides/moving-to-lan/' | relative_url }}">Moving to LAN</a> for manual steps.</p>
+
+<p>The FlightAware web page is available from the Pi desktop on port 80 at <code>http://localhost/</code>.</p>
 
 <h2>Boot Sequence</h2>
 

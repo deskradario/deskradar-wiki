@@ -11,6 +11,9 @@ permalink: /faq.html
 <h2>What data does DeskRadar use?</h2>
 <p>DeskRadar reads a local dump1090-style JSON feed from <code>http://127.0.0.1:8080/data/aircraft.json</code> by default. It does not draw every object in that feed, only those with enough data to draw and that are in range</p>
 
+<h2 id="why-http">Why HTTP?</h2>
+<p>HTTP keeps DeskRadar flexible for people who already have an ADS-B receiver running in their house. Instead of requiring the whole receiver stack to live inside the enclosure, DeskRadar can read an existing dump1090-style feed over the network and send simple draw requests to the MatrixPortal. That makes it easier to buy or build just the matrix and enclosure side of the project and display data you already have.</p>
+
 <h2>Do I need internet access?</h2>
 <p>Not for the core display loop. The Pi needs local network connectivity to the MatrixPortal and local access to dump1090. Internet access is useful for installing packages, updates, and anything else your Pi image or receiver setup needs.</p>
 

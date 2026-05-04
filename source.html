@@ -10,50 +10,17 @@ permalink: /source.html
 
 <h2>deskradar</h2>
 <p>The main Python application. It runs on the Raspberry Pi, reads <code>/etc/deskradar/config.json</code> by default, polls ADS-B data from a local dump1090-style JSON endpoint, filters aircraft, builds per-flight tracks, and sends pixel draw commands to the MatrixPortal S3 over HTTP. It also sends closest-aircraft and heartbeat text to the LCD service.</p>
-<p><strong>Language:</strong> Python 3.13 &nbsp;|&nbsp; <strong>Runs on:</strong> Raspberry Pi OS (Bookworm)</p>
+<p><strong>Python 3.13</strong></p>
 <p><a href="https://github.com/deskradario/deskradar">github.com/deskradario/deskradar</a></p>
 
-<h3>Important files</h3>
-<table>
-  <thead><tr><th>Path</th><th>Purpose</th></tr></thead>
-  <tbody>
-    <tr><td><code>app/main.py</code></td><td>Main polling loop, matrix updates, LCD heartbeat, and error handling.</td></tr>
-    <tr><td><code>app/dump1090.py</code></td><td>Fetches dump1090 JSON and keeps only aircraft with <code>seen</code>, <code>lon</code>, <code>lat</code>, <code>alt_geom</code>, <code>hex</code>, and <code>flight</code>.</td></tr>
-    <tr><td><code>app/format.py</code> and <code>app/formatters.py</code></td><td>Track cleanup, plotting, gap filling, smoothing, color, fading, stale-track handling, and closest highlight.</td></tr>
-    <tr><td><code>app/send.py</code></td><td>Posts to MatrixPortal <code>/draw</code>, <code>/empty</code>, and <code>/no-change</code>.</td></tr>
-    <tr><td><code>config-example.json</code></td><td>Example runtime config copied to <code>/etc/deskradar/config.json</code> by <code>init.sh</code>.</td></tr>
-  </tbody>
-</table>
 
 <h2>deskradar-pi-services</h2>
 <p>Supporting services that run alongside the main app on the Pi. It includes systemd unit files, a FastAPI server for the 16x2 I2C LCD display, a Flask web configurator served by Waitress on port 5000, NetworkManager scripts, and a one-shot boot check that resolves the MatrixPortal mDNS name and writes <code>MATRIX_HTTP_URL</code>.</p>
-<p><strong>Language:</strong> Python &nbsp;|&nbsp; <strong>Managed by:</strong> systemd</p>
+<p><strong>Python</strong></p>
 <p><a href="https://github.com/deskradario/deskradar-pi-services">github.com/deskradario/deskradar-pi-services</a></p>
 
-<h3>Important files</h3>
-<table>
-  <thead><tr><th>Path</th><th>Purpose</th></tr></thead>
-  <tbody>
-    <tr><td><code>services/*.service</code></td><td>systemd services for the main app, LCD, configurator, and boot check.</td></tr>
-    <tr><td><code>scripts/setup_ap.sh</code></td><td>Creates the <code>deskradarAP</code> NetworkManager access point with SSID <code>deskradar</code>, password <code>deskradaradsb</code>, and IP <code>10.42.0.50/24</code>.</td></tr>
-    <tr><td><code>scripts/boot_check.py</code></td><td>Waits 10 seconds, resolves <code>deskradar-portal.local</code>, and writes <code>http://&lt;ip&gt;:80</code> to <code>MATRIX_HTTP_URL</code>.</td></tr>
-    <tr><td><code>configurator/app.py</code></td><td>Web UI for WiFi switching and config editing. It writes MatrixPortal WiFi credentials only after the Pi connects successfully.</td></tr>
-    <tr><td><code>lcd/app/main.py</code></td><td>FastAPI <code>/display</code> endpoint that writes two lines to the LCD and skips duplicate messages.</td></tr>
-  </tbody>
-</table>
 
 <h2>deskradar-matrixportals3</h2>
 <p>CircuitPython firmware for the Adafruit MatrixPortal S3. The device reads <code>wifi.txt</code>, connects to WiFi, advertises itself via mDNS as <code>deskradar-portal.local</code>, and runs an HTTP server on port 80. On receiving a <code>/draw</code> request it renders the pixel data to the 64x64 HUB75 LED matrix. A watchdog reboots the device if WiFi disconnects or if no HTTP request arrives within 60 seconds.</p>
-<p><strong>Language:</strong> CircuitPython &nbsp;|&nbsp; <strong>Hardware:</strong> Adafruit MatrixPortal S3 + 64x64 HUB75 LED matrix</p>
+<p><strong>CircuitPython</strong></p>
 <p><a href="https://github.com/deskradario/deskradar-matrixportals3">github.com/deskradario/deskradar-matrixportals3</a></p>
-
-<h3>Important files</h3>
-<table>
-  <thead><tr><th>Path</th><th>Purpose</th></tr></thead>
-  <tbody>
-    <tr><td><code>src/code.py</code></td><td>CircuitPython display setup, WiFi connection, mDNS advertising, HTTP endpoints, and watchdog loop.</td></tr>
-    <tr><td><code>src/wifi.txt</code></td><td>Two-line WiFi credential file. Default is the Pi AP SSID and password.</td></tr>
-    <tr><td><code>src/lib/</code></td><td>Bundled CircuitPython libraries required by the firmware.</td></tr>
-    <tr><td><code>install.sh</code></td><td>Copies <code>src/*</code> to <code>/Volumes/CIRCUITPY/</code>.</td></tr>
-  </tbody>
-</table>

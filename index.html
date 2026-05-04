@@ -11,9 +11,16 @@ nav: overview
   <img src="{{ '/hero.jpg' | relative_url }}" alt="DeskRadar LED matrix display showing live aircraft tracks" width="3024" height="3024" loading="eager">
 </figure>
 
-<p>DeskRadar is a hardware and software system that reads aircraft data from a local dump1090 ADS-B output and renders nearby aircraft tracks on a 64x64 RGB LED matrix. The Raspberry Pi runs the RTL-SDR receiver, display calculation software and support services. An Adafruit MatrixPortal S3 drives the HUB75 matrix over HTTP.</p>
+<p>DeskRadar is a hardware and software system that reads aircraft data from a local dump1090 ADS-B output and renders nearby aircraft tracks on a 64x64 RGB LED matrix. The Raspberry Pi runs a FlightAware Pro Stick SDR, a USB software-defined radio receiver, display calculation software and support services. An Adafruit MatrixPortal S3 drives the HUB75 matrix over HTTP. <a href="faq.html">Why HTTP?</a></p>
 
 <p>The main display shows each aircraft as a colored track. Position is mapped from latitude and longitude to matrix pixels, altitude is mapped to color, trails fade as the track ages, and duplicated pixels are collapsed so the highest aircraft wins when multiple points land on the same pixel. A 16x2 I2C LCD shows status messages and the current closest aircraft callsign/altitude.</p>
+
+<section class="support-callout">
+  <div>
+    <h2>How You Can Get One</h2>
+  </div>
+  <a class="button-link" href="{{ '/guides/how-you-can-get-one/' | relative_url }}">Guide</a>
+</section>
 
 <p>If you like Deskradar, you can support here: <a href="https://buymeacoffee.com/deskradar" target="_blank" rel="noopener noreferrer">buymeacoffee.com/deskradar</a>.</p>
 
