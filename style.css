@@ -255,6 +255,21 @@ li { margin-bottom: 0.3rem; }
   margin-bottom: 2rem;
 }
 
+.home-build-link {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin: 1.75rem 0 2rem;
+}
+
+.home-build-link h2 {
+  border-bottom: 0;
+  font-size: 1.1rem;
+  margin: 0;
+  padding-bottom: 0;
+}
+
 .support-callout {
   display: flex;
   align-items: center;
