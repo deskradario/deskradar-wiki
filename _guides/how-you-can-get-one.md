@@ -12,12 +12,13 @@ There are three ways to get a DeskRadar64. Pick the path that fits you, then fol
 
 ---
 
-## Option 1 — Buy from the Store (Easiest)
+## Option 1 — Buy the Enclosure + Source Electronics
 
-Buy the enclosure and parts kit directly from the DeskRadar Etsy store. You get everything you need to assemble and run the device — no hunting down individual components.
+Buy the housing from the store and order the electronics separately from the bill of materials. The store handles the hardest part of the build — the printed and fitted enclosure.
 
-**What you'll need from the store:**
-- Enclosure and parts kit from <a href="https://shop.deskradar.io" target="_blank" rel="noopener noreferrer">shop.deskradar.io</a>
+**What you'll need:**
+- Full Housing With Threads and Fixings (£60) from <a href="https://shop.deskradar.io" target="_blank" rel="noopener noreferrer">shop.deskradar.io</a>
+- Electronics from the <a href="{{ '/hardware/' | relative_url }}">Bill of Materials</a>
 - A computer to flash the Pi image and install firmware
 
 **Steps:**
