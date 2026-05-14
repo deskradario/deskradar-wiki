@@ -21,19 +21,37 @@
       <span></span><span></span><span></span>
     </button>
     <ul id="primary-nav">
+      <li class="nav-cta-item"><a class="nav-cta" href="{{ '/guides/how-you-can-get-one/' | relative_url }}">Get One</a></li>
       <li><a href="{{ '/index.html' | relative_url }}"{% if page.nav == 'overview' %} class="active"{% endif %}>Overview</a></li>
-      <li><a href="{{ '/configuration.html' | relative_url }}"{% if page.nav == 'configuration' %} class="active"{% endif %}>Configuration</a></li>
-      <li><a href="{{ '/faq.html' | relative_url }}"{% if page.nav == 'faq' %} class="active"{% endif %}>FAQ</a></li>
-      <li><a href="{{ '/guides.html' | relative_url }}"{% if page.nav == 'guides' or page.collection == 'guides' %} class="active"{% endif %}>Guides</a></li>
-      <li><a href="{{ '/hardware/' | relative_url }}"{% if page.nav == 'hardware' %} class="active"{% endif %}>Hardware &amp; Bill of Materials</a></li>
-      <li><a href="{{ '/pi_image/' | relative_url }}"{% if page.nav == 'pi_image' %} class="active"{% endif %}>DeskRadar Pi Image</a></li>
+
+      {% assign build_active = false %}
+      {% if page.nav == 'hardware' or page.nav == 'pi_image' or page.nav == 'guides' or page.collection == 'guides' %}{% assign build_active = true %}{% endif %}
+      <li class="nav-dropdown">
+        <a href="{{ '/guides.html' | relative_url }}"{% if build_active %} class="active"{% endif %}>Build</a>
+        <ul class="nav-dropdown-menu">
+          <li><a href="{{ '/hardware/' | relative_url }}"{% if page.nav == 'hardware' %} class="active"{% endif %}>Hardware &amp; Bill of Materials</a></li>
+          <li><a href="{{ '/pi_image/' | relative_url }}"{% if page.nav == 'pi_image' %} class="active"{% endif %}>DeskRadar Pi Image</a></li>
+          <li><a href="{{ '/guides.html' | relative_url }}"{% if page.nav == 'guides' or page.collection == 'guides' %} class="active"{% endif %}>All Guides</a></li>
+        </ul>
+      </li>
+
+      {% assign ref_active = false %}
+      {% if page.nav == 'configuration' or page.nav == 'faq' or page.nav == 'architecture' or page.nav == 'source' or page.nav == 'contact' %}{% assign ref_active = true %}{% endif %}
+      <li class="nav-dropdown">
+        <a href="{{ '/configuration.html' | relative_url }}"{% if ref_active %} class="active"{% endif %}>Reference</a>
+        <ul class="nav-dropdown-menu">
+          <li><a href="{{ '/configuration.html' | relative_url }}"{% if page.nav == 'configuration' %} class="active"{% endif %}>Configuration</a></li>
+          <li><a href="{{ '/architecture.html' | relative_url }}"{% if page.nav == 'architecture' %} class="active"{% endif %}>Architecture</a></li>
+          <li><a href="{{ '/faq.html' | relative_url }}"{% if page.nav == 'faq' %} class="active"{% endif %}>FAQ</a></li>
+          <li><a href="{{ '/source.html' | relative_url }}"{% if page.nav == 'source' %} class="active"{% endif %}>Source Code</a></li>
+          <li><a href="{{ '/contact.html' | relative_url }}"{% if page.nav == 'contact' %} class="active"{% endif %}>Contact</a></li>
+          <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
+        </ul>
+      </li>
+
       <li><a href="{{ '/gallery/' | relative_url }}"{% if page.nav == 'gallery' %} class="active"{% endif %}>Gallery</a></li>
-      <li><a href="{{ '/architecture.html' | relative_url }}"{% if page.nav == 'architecture' %} class="active"{% endif %}>Architecture</a></li>
-      <li><a href="{{ '/source.html' | relative_url }}"{% if page.nav == 'source' %} class="active"{% endif %}>Source</a></li>
       <li><a href="{{ '/updates.html' | relative_url }}"{% if page.nav == 'updates' or page.collection == 'posts' %} class="active"{% endif %}>Updates</a></li>
       <li><a href="https://shop.deskradar.io" target="_blank" rel="noopener noreferrer">Store</a></li>
-      <li><a href="{{ '/contact.html' | relative_url }}"{% if page.nav == 'contact' %} class="active"{% endif %}>Contact</a></li>
-      <li><a href="https://trello.com/b/1DyW16cA/deskradar64" target="_blank" rel="noopener noreferrer">Feature &amp; Bug Board</a></li>
     </ul>
   </div>
 </nav>
